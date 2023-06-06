@@ -1,0 +1,25 @@
+{
+  "name": "project_09-strangerthings-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Drewseph87/StangersThings-React.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Drewseph87/StangersThings-React/issues"
+  },
+  "homepage": "https://github.com/Drewseph87/StangersThings-React#readme",
+  "dependencies": {
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-scripts": "^5.0.1"
+  }
+}
