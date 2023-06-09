@@ -2,22 +2,22 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
 import {
-  // Login,
+  Login,
   // Messages,
   Posts,
   // Profile
 } from "./components";
 
 const App = () => {
-  const [postList, setPostList] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   return (
     <div className="app">
-      {/* <Login />
-      <Messages /> */}
-      <Posts postList={postList} setPostList={setPostList} />
+      <Login />;
+      {/* <Messages />; */}
+      <Posts posts={posts} setPosts={setPosts} />;
       {/* <Profile /> */}
-      {isLoading ? <Loading /> : null}
+      {/* {isLoading ? <Loading /> : null} */}
     </div>
   );
 };

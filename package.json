@@ -17,7 +17,6 @@
   "bugs": {
     "url": "https://github.com/Drewseph87/StangersThings-React/issues"
   },
-  "homepage": "https://github.com/Drewseph87/StangersThings-React#readme",
   "dependencies": {
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
