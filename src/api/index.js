@@ -4,7 +4,6 @@
 
 export const COHORT_NAME = "2303-FTB-ET-WEB-PT";
 export const BASE_URL = `https://strangers-things.herokuapp.com/api/${COHORT_NAME}`;
-export const TOKEN = "fill in token process here";
 
 // POST SECTION
 
@@ -19,20 +18,53 @@ export const fetchPosts = async () => {
       },
     });
     const result = await response.json();
-   
 
     const posts = result.data.posts;
-    
+
     return posts;
   } catch (err) {
     console.log("No Posts Available", err);
   }
 };
 
-
 // Creating a new User and sending it to the server for a token
-const registerUser = async () => {
+export const registerUser = async (username, password) => {
+  const minLength = 8;
+  const specChar = /[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?!]+/;
+  const uppercaseChar = /[A-Z]/;
+
+  if (password.length < minLength) {
+    throw new Error(`Password must be at least ${minLength} characters long.`);
+  }
+  if (!specChar.test(password)) {
+    throw new Error(`Password must contain at least ONE special charcater.`);
+  }
+  if (!uppercaseChar.test(password)) {
+    throw new Error(`Password must contain at least ONE Uppercase Letter.`);
+  }
+
   try {
+    // Check if the username is available
+    // const availabilityResponse = await fetch(
+    //   `${BASE_URL}/users/check-availability`,
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       username: username,
+    //     }),
+    //   }
+    // );
+
+    // const availabilityResult = await availabilityResponse.json();
+    // if (!availabilityResult.available) {
+    //   throw new Error(
+    //     "Username is already taken. Please choose a different username."
+    //   );
+    // }
+
     const response = await fetch(`${BASE_URL}/users/register`, {
       method: "POST",
       headers: {
@@ -40,23 +72,26 @@ const registerUser = async () => {
       },
       body: JSON.stringify({
         user: {
-          username: "superman27",
-          password: "krypt0n0rbust",
+          username: `${username}`,
+          password: `${password}`,
         },
       }),
     });
     const result = await response.json();
+    if (result.success) {
+      const token = result.token;
+    }
     // You can log ▲▲▲ the result
     // here ▼▼▼ to view the json object before returning it
     console.log(result);
-    return result;
+    return result.data;
   } catch (err) {
     console.error(err);
   }
 };
 
 // How to login when you have access and a token
-const loginUser = async () => {
+export const loginUser = async (username, password) => {
   try {
     const response = await fetch(`${BASE_URL}/users/login`, {
       method: "POST",
@@ -65,14 +100,17 @@ const loginUser = async () => {
       },
       body: JSON.stringify({
         user: {
-          username: "superman27",
-          password: "krypt0n0rbust",
+          username: `${username}`,
+          password: `${password}`,
         },
       }),
     });
     const result = await response.json();
+    if (result.success) {
+      const token = result.token;
+    }
     console.log(result);
-    return result;
+    return result.data;
   } catch (err) {
     console.error(err);
   }
@@ -119,7 +157,6 @@ const loginUser = async () => {
 //     },
 //     "data": null
 // }
-
 
 // // Creating or making a new post and sending the data to the server
 // const makePost = async () => {

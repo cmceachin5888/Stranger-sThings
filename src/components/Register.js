@@ -1,7 +1,7 @@
 import React from "react";
-import { loginUser } from "../api";
+import { registerUser } from "../api";
 
-export const loginForm = ({
+export const registerNew = ({
   username,
   setUsername,
   password,
@@ -11,21 +11,20 @@ export const loginForm = ({
 }) => {
   const handleSubmit = (event) => {
     // const username = event.target.username.value;
-
     event.preventDefault();
     setUsername("");
     setPassword("");
 
-    const loginData = async () => {
+    const registerData = async () => {
       try {
-        const result = await loginUser(username, password);
+        const result = await registerUser(username, password);
         localStorage.setItem("token", JSON.stringify(result.token));
         setToken(token);
       } catch (error) {
         console.error(error);
       }
     };
-    loginData();
+    registerData();
   };
 
   const handleChange = (event) => {
@@ -35,27 +34,29 @@ export const loginForm = ({
 
   return (
     <div id="container">
-      <div id="navbar">Login Here!</div>
+      <div id="navbar">Create an Account</div>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="username">Create a Username:</label>
         <input
           type="text"
           name="username"
           value={username}
           onChange={handleChange}
+          required
         />
-        <label htmlFor="password">Password:</label>
+        <label htmlFor="password">Create a Password:</label>
         <input
           type="password"
           name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <button type="submit">Log In</button>
+        <button type="submit">Register</button>
       </form>
-      <div href="REGISTER URL INSERT HERE">Need to Register? Click Here!</div>
+      <div href="REGISTER URL INSERT HERE">Have an Account, Login here!</div>
     </div>
   );
 };
 
-export default loginForm;
+export default registerNew;
