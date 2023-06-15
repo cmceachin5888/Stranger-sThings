@@ -1,9 +1,93 @@
-/**
- * This file features and exports all of our calls to the API
- */
+/* This file features and exports all of our calls to the API*/
 
 export const COHORT_NAME = "2303-FTB-ET-WEB-PT";
 export const BASE_URL = `https://strangers-things.herokuapp.com/api/${COHORT_NAME}`;
+
+// LOGIN AND REGISTER SECTION
+
+// Creating a new User and sending it to the server for a token
+export const registerUser = async (username, password) => {
+  const minLength = 8;
+  const specChar = /[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?!]+/;
+  const uppercaseChar = /[A-Z]/;
+
+  if (password.length < minLength) {
+    throw new Error(`Password must be at least ${minLength} characters long.`);
+  }
+  if (!specChar.test(password)) {
+    throw new Error(`Password must contain at least ONE special character.`);
+  }
+  if (!uppercaseChar.test(password)) {
+    throw new Error(`Password must contain at least ONE Uppercase Letter.`);
+  }
+
+  let result;
+
+  try {
+    const response = await fetch(`${BASE_URL}/users/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: {
+          username,
+          password,
+        },
+      }),
+    });
+    result = await response.json();
+  } catch (err) {
+    throw new Error("Register User API down");
+  }
+  // You can log ▲▲▲ the result
+  // here ▼▼▼ to view the json object before returning it
+  console.log(result);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+
+  return result.data;
+};
+
+// How to login when you have access and a token
+export const loginUser = async (username, password) => {
+  let result;
+
+  try {
+    const response = await fetch(`${BASE_URL}/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: {
+          username,
+          password,
+        },
+      }),
+    });
+    result = await response.json();
+    console.log(result);
+  } catch (err) {
+    throw new Error("Trouble Loggin In");
+  }
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+
+  return result.data;
+};
+
+// Sample Result of if it worked:
+//   {
+//     "success": true,
+//     "error": null,
+//     "data": {
+//       "token": "xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTg5MDY2ZGQ0MzkxNjAwTc1NTNlMDUiLCJ1c2VybmFtZSI6Im1hdHQiLCJpYXQiOjE1ODYwMzgzODF9.CTj4owBl0PB-G6G4E_1l6DS6_cVc0iKcMzBIWFUYM1p",
+//       "message": "Thanks for signing up for our service."
+//     }
+//   }
 
 // POST SECTION
 
@@ -20,174 +104,47 @@ export const fetchPosts = async () => {
     const result = await response.json();
 
     const posts = result.data.posts;
-
+    console.log(result);
     return posts;
   } catch (err) {
     console.log("No Posts Available", err);
   }
 };
 
-// Creating a new User and sending it to the server for a token
-export const registerUser = async (username, password) => {
-  const minLength = 8;
-  const specChar = /[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?!]+/;
-  const uppercaseChar = /[A-Z]/;
-
-  if (password.length < minLength) {
-    throw new Error(`Password must be at least ${minLength} characters long.`);
-  }
-  if (!specChar.test(password)) {
-    throw new Error(`Password must contain at least ONE special charcater.`);
-  }
-  if (!uppercaseChar.test(password)) {
-    throw new Error(`Password must contain at least ONE Uppercase Letter.`);
-  }
-
-  try {
-    // Check if the username is available
-    // const availabilityResponse = await fetch(
-    //   `${BASE_URL}/users/check-availability`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       username: username,
-    //     }),
-    //   }
-    // );
-
-    // const availabilityResult = await availabilityResponse.json();
-    // if (!availabilityResult.available) {
-    //   throw new Error(
-    //     "Username is already taken. Please choose a different username."
-    //   );
-    // }
-
-    const response = await fetch(`${BASE_URL}/users/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          username: `${username}`,
-          password: `${password}`,
-        },
-      }),
-    });
-    const result = await response.json();
-    if (result.success) {
-      const token = result.token;
-    }
-    // You can log ▲▲▲ the result
-    // here ▼▼▼ to view the json object before returning it
-    console.log(result);
-    return result.data;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-// How to login when you have access and a token
-export const loginUser = async (username, password) => {
-  try {
-    const response = await fetch(`${BASE_URL}/users/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          username: `${username}`,
-          password: `${password}`,
-        },
-      }),
-    });
-    const result = await response.json();
-    if (result.success) {
-      const token = result.token;
-    }
-    console.log(result);
-    return result.data;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-// Sample Result of if it worked:
-//   {
-//     "success": true,
-//     "error": null,
-//     "data": {
-//       "token": "xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTg5MDY2ZGQ0MzkxNjAwTc1NTNlMDUiLCJ1c2VybmFtZSI6Im1hdHQiLCJpYXQiOjE1ODYwMzgzODF9.CTj4owBl0PB-G6G4E_1l6DS6_cVc0iKcMzBIWFUYM1p",
-//       "message": "Thanks for signing up for our service."
-//     }
-//   }
-
-//example:
-//   // example of token authorization if you are a logged in user
-// const someFunction = async (token) => {
-//     try {
-//       const response = await fetch(`${BASE_URL}/someEndPoint`, {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${token}`,
-//         },
-//         body: JSON.stringify({
-//           /* whatever things you need to send to the API */
-//         }),
-//       });
-//       const result = await response.json();
-//       console.log(result);
-//       return result;
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-// If token isn't working, response below:
-// {
-//     "success": false,
-//     "error": {
-//         "type": "InvalidToken",
-//         "message": "Invalid token, please sign up or log in"
-//     },
-//     "data": null
-// }
-
 // // Creating or making a new post and sending the data to the server
-// const makePost = async () => {
-//   try {
-//     const response = await fetch(`${BASE_URL}/posts`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${TOKEN_STRING_HERE}`,
-//       },
-//       body: JSON.stringify({
-//         post: {
-//           title: "My favorite stuffed animal",
-//           description:
-//             "This is a pooh doll from 1973. It has been carefully taken care of since I first got it.",
-//           price: "$480.00",
-//           willDeliver: true,
-//         },
-//       }),
-//     });
-//     const result = await response.json();
-//     console.log(result);
-//     return result;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+export const makePost = async (
+  token,
+  title,
+  description,
+  price,
+  willDeliver
+) => {
+  try {
+    const response = await fetch(`${BASE_URL}/posts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        post: {
+          title,
+          description,
+          price,
+          willDeliver,
+        },
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+    return result;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 // //editing a post if you have authored it
-
-// const updatePost = async () => {
+// export const updatePost = async () => {
 //   try {
 //     // You will need to insert a variable into the fetch template literal
 //     // in order to make the POST_ID dynamic.
@@ -234,110 +191,3 @@ export const loginUser = async (username, password) => {
 //     console.error(err);
 //   }
 // };
-
-/* EVERYTHING BELOW THIS LINE IS EXAMPLE CODE FROM THE ART COLLECTOR WE CAN USE*/
-
-/**
- * This will make a call to the API for a single term and value (e.g. "person", and "unknown"), and return the result
- */
-
-// export async function fetchQueryResultsFromTermAndValue(term, value) {
-//   try {
-//     const response = await fetch(
-//       `${BASE_URL}/object?${KEY}&${term}=${encodeURI(
-//         value.split("-").join("|")
-//       )}`
-//     );
-//     const data = await response.json();
-
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
-/**
- * This will make a call to the API for a preformed url (useful for previous and next buttons), and return the result
- */
-
-// export async function fetchQueryResultsFromURL(url) {
-//   try {
-//     const response = await fetch(url);
-//     const data = await response.json();
-
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
-/**
- * Requires an object { century: '', classification: '', queryString: '' } to be passed in as an argument
- *
- * Then makes a call to the API, and returns the first page of results
- */
-
-// export async function fetchQueryResults({
-//   century = "",
-//   classification = "",
-//   queryString = "",
-// }) {
-//   const url = `${BASE_URL}/object?${KEY}&classification=${classification}&century=${century}&keyword=${queryString}`;
-
-//   try {
-//     const response = await fetch(url);
-//     const data = await response.json();
-
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
-/**
- * This returns early if there are centuries stored in localStorage, or fetches them from the API and stores them in localStorage if not
- */
-
-// export async function fetchAllCenturies() {
-//   if (localStorage.getItem("centuries")) {
-//     return JSON.parse(localStorage.getItem("centuries"));
-//   }
-
-//   const url = `${BASE_URL}/century?${KEY}&size=100&sort=temporalorder`;
-
-//   try {
-//     const response = await fetch(url);
-//     const data = await response.json();
-//     const records = data.records;
-
-//     localStorage.setItem("centuries", JSON.stringify(records));
-
-//     return records;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
-/**
- * This returns early if there are classifications stored in localStorage, or fetches them from the API and stores them in localStorage if not
- */
-
-// export async function fetchAllClassifications() {
-//   if (localStorage.getItem("classifications")) {
-//     return JSON.parse(localStorage.getItem("classifications"));
-//   }
-
-//   const url = `${BASE_URL}/classification?${KEY}&size=100&sort=name`;
-
-//   try {
-//     const response = await fetch(url);
-//     const data = await response.json();
-//     const records = data.records;
-
-//     localStorage.setItem("classifications", JSON.stringify(records));
-
-//     return records;
-//   } catch (error) {
-//     throw error;
-//   }
-// }

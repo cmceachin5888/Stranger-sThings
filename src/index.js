@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Link, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import {
   Login,
@@ -8,65 +8,75 @@ import {
   Posts,
   // Profile
   Register,
+  // LoggedOut,
+  Navbar,
 } from "./components";
 
 const App = () => {
   const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [token, setToken] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const storage = localStorage.getItem("token");
-    if (storage) {
-      const token = JSON.parse(storage);
-      setToken(token);
-    }
+    const result = JSON.parse(storage);
+    setToken(result);
   }, []);
 
   return (
     <BrowserRouter>
-      <div id="container">
-        <div id="navbar">
-          <Link to="/Login">Login</Link>
-          <Link to="/Register">Register</Link>
-          <Link to="/Posts">Posts</Link>
-        </div>
-      </div>
-
+      {/*Using path='/' in order to make it the home page when you login*/}
       <div className="app">
+        <Navbar token={token} setToken={setToken} />
         <Routes>
           <Route
             path="/Login"
             element={
               <Login
-                username={username}
-                setUsername={setUsername}
-                password={password}
-                setPassword={setPassword}
                 token={token}
                 setToken={setToken}
+                loading={loading}
+                setLoading={setLoading}
               />
             }
           />
           ;{/* <Messages />; */}
           <Route
             path="/Posts"
-            element={<Posts posts={posts} setPosts={setPosts} />}
+            element={
+              <Posts
+                posts={posts}
+                setPosts={setPosts}
+                loading={loading}
+                setLoading={setLoading}
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            }
+          />
+          <Route
+            path="/makePost"
+            element={
+              <Posts
+                posts={posts}
+                setPosts={setPosts}
+                loading={loading}
+                setLoading={setLoading}
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+              />
+            }
           />
           {/* <Profile /> */}
           <Route
             path="/Register"
             element={
               <Register
-                username={username}
-                setUsername={setUsername}
-                password={password}
-                setPassword={setPassword}
                 token={token}
                 setToken={setToken}
+                loading={loading}
+                setLoading={setLoading}
               />
             }
           />

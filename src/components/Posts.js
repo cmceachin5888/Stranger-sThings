@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { fetchPosts } from "../api";
+import { fetchPosts, makePost } from "../api";
 
 export const renderAllPosts = ({ posts, setPosts }) => {
   useEffect(() => {
@@ -22,6 +22,7 @@ export const renderAllPosts = ({ posts, setPosts }) => {
         return (
           <div className="posts" key={post._id}>
             <h3>{post.title}</h3>
+            <div>{post.author.username}</div>
             <div>{post.description}</div>
             <div>{post.price}</div>
             <div>{post.location}</div>
@@ -32,4 +33,5 @@ export const renderAllPosts = ({ posts, setPosts }) => {
     </>
   );
 };
+
 export default renderAllPosts;
