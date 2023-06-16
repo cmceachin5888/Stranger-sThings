@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export const Navbar = ({ token, setToken }) => {
+const Navbar = ({ token, setToken }) => {
   const logout = () => {
     setToken("");
     localStorage.removeItem("token");

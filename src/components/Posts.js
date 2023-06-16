@@ -1,13 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchPosts, deletePost } from "../api";
 
-export const RenderAllPosts = ({ posts, setPosts, currentUser }) => {
+const RenderAllPosts = ({ currentUser, isLoggedIn }) => {
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchPostsData = async () => {
       try {
         const token = localStorage.getItem("token");
         const result = await fetchPosts(token);
+        console.log("Token:", token);
         setPosts(result);
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -20,12 +25,18 @@ export const RenderAllPosts = ({ posts, setPosts, currentUser }) => {
     try {
       const token = localStorage.getItem("token");
       await deletePost(token, postId);
-      setPosts(posts.filter((post) => post._id !== postId));
+      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
 
+  if (isLoading) {
+    return <p>Loading posts...</p>;
+  }
+
+  console.log("currentUser:", currentUser);
+console.log("isLoggedIn:", isLoggedIn);
   return (
     <>
       <h1>Posts</h1>
@@ -34,8 +45,8 @@ export const RenderAllPosts = ({ posts, setPosts, currentUser }) => {
           return null;
         }
 
-        const isAuthor = post.isAuthor === true && currentUser === post.author?.username;
-        const isLoggedIn = !!currentUser;
+        const isAuthor =
+          post.author && currentUser && post.author.username === currentUser.username;
 
         return (
           <div className="posts" key={post._id}>
@@ -45,7 +56,6 @@ export const RenderAllPosts = ({ posts, setPosts, currentUser }) => {
             <div>{post.price}</div>
             <div>{post.location}</div>
             <div>{post.willDeliver ? "Will Deliver" : "No Delivery"}</div>
-            
 
             {isAuthor && post.messages && (
               <div>
@@ -59,14 +69,11 @@ export const RenderAllPosts = ({ posts, setPosts, currentUser }) => {
               </div>
             )}
 
-
-            {isAuthor && isLoggedIn && (
-              <>
-                <button onClick={() => handleDelete(post._id)}>Delete Post</button>
-              </>
+            {isAuthor && currentUser && currentUser.username === post.author?.username && (
+              <button onClick={() => handleDelete(post._id)}>Delete Post</button>
             )}
 
-            {!isAuthor && isLoggedIn && (
+            {!isAuthor && isLoggedIn && currentUser && (
               <>
                 <button>Contact Seller</button>
                 <button>Make Offer</button>
@@ -79,4 +86,4 @@ export const RenderAllPosts = ({ posts, setPosts, currentUser }) => {
   );
 };
 
-export default renderAllPosts;
+export default RenderAllPosts;

@@ -105,7 +105,7 @@ export const fetchPosts = async (token) => {
     const result = await response.json();
 
     const posts = result.data.posts;
-    console.log(result);
+
     return posts;
   } catch (err) {
     console.log("No Posts Available", err);

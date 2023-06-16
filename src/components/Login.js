@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
-export const LoginForm = ({ token, setToken, loading, setLoading }) => {
+const LoginForm = ({ token, setToken, loading, setLoading }) => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -73,4 +73,4 @@ export const LoginForm = ({ token, setToken, loading, setLoading }) => {
   );
 };
 
-export default loginForm;
+export default LoginForm;

@@ -18,7 +18,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const currentUser = 
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const storage = localStorage.getItem("token");
@@ -53,6 +53,8 @@ const App = () => {
                 setLoading={setLoading}
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
               />
             }
           />
