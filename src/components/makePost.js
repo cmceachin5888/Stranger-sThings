@@ -1,23 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { makePost } from "../api";
 
 export const newPostForm = ({
-  posts,
-  setPosts,
-  loading,
+  // loading,
   setLoading,
-  isLoggedIn,
-  setIsLoggedIn,
+  // isLoggedIn,
+  // setIsLoggedIn,
+  posts,
+  setPosts
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [location, setLocation] = useState("");
   const [willDeliver, setWillDeliver] = useState(false);
-  const token = localstorage.getItem("token");
 
   const handleSubmit = (event) => {
-    if (!title || !description || !price || !willDeliver) {
+
+    if (!title || !description || !price || !location) {
+      console.error("Please fill in all the required fields");
       return;
     }
 
@@ -25,17 +26,18 @@ export const newPostForm = ({
     event.preventDefault();
 
     const makePostData = async () => {
+      const token = localStorage.getItem("token");
       try {
         const result = await makePost(
           token,
           title,
           description,
           price,
+          location,
           willDeliver
         );
-        //const updatedArray = posts.map((post) => post).push(result)
-        //setPosts(updatedArray)
-        // setPosts([...posts, result]);
+
+        setPosts([...posts, result]);
         setTitle("");
         setDescription("");
         setPrice("");
@@ -48,24 +50,66 @@ export const newPostForm = ({
     makePostData();
   };
 
-  fetchPostsData();
+  // const handleChange = (event) => {
+  //   setTitle(event.target.value);
+  //   setDescription(event.target.value);
+  //   setPrice(event.target.value);
+  //   setLocation(event.target.value);
+  //   setWillDeliver(event.target.value);
+  // };
 
   return (
-    <>
-      <h1>Posts</h1>
-      {posts.map((post) => {
-        return (
-          <div className="posts" key={post._id}>
-            <h3>{post.title}</h3>
-            <div>{post.author.username}</div>
-            <div>{post.description}</div>
-            <div>{post.price}</div>
-            <div>{post.location}</div>
-            <div>{post.willDeliver}</div>
-          </div>
-        );
-      })}
-    </>
+    <div id="container">
+      <div id="navbar">Login Here!</div>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="Title">Title:</label>
+        <input
+          placeholder={"Title"}
+          type="text"
+          name="Title"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          required
+        />
+        <label htmlFor="Description">Description:</label>
+        <input
+          placeholder={"Description"}
+          type="text"
+          name="Description"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+          required
+        />
+        <label htmlFor="Price">Price:</label>       
+        <input
+          placeholder={"Price"}
+          type="text"
+          name="Price"
+          value={price}
+          onChange={(event) => setPrice(event.target.value)}
+          required
+        />
+        <label htmlFor="Location">Location:</label>
+        <input
+          placeholder={"Location"}
+          type="text"
+          name="Location"
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
+          required
+        />
+        <label htmlFor="WillDeliver">Will Deliver?:</label>
+        <input
+          type="Checkbox"
+          name="WillDeliver"
+          value="true"
+          checked={willDeliver}
+          onChange={(event) => setWillDeliver(event.target.checked)}
+        />        
+        <button type="submit">Submit Post</button>
+      </form>
+      {/* <div>{errorMessage}</div> */}
+    </div>
   );
 };
 

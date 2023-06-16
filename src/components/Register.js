@@ -20,8 +20,8 @@ export const registerNew = ({ token, setToken, loading, setLoading }) => {
     const registerData = async () => {
       try {
         const result = await registerUser(username, password);
-        localStorage.setItem("token", JSON.stringify(result.token));
-        setToken(token);
+        localStorage.setItem("token", result.token);
+        setToken(result.token);
         setUsername("");
         setPassword("");
       } catch (error) {
@@ -39,7 +39,7 @@ export const registerNew = ({ token, setToken, loading, setLoading }) => {
     //console.log(setUsername);
   };
 
-  if (token) {
+  if (result.token) {
     const navigate = useNavigate();
     navigate("/Posts");
   }

@@ -6,6 +6,7 @@ import {
   Login,
   // Messages,
   Posts,
+  MakePost,
   // Profile
   Register,
   // LoggedOut,
@@ -17,11 +18,11 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const currentUser = 
 
   useEffect(() => {
     const storage = localStorage.getItem("token");
-    const result = JSON.parse(storage);
-    setToken(result);
+    setToken(storage);
   }, []);
 
   return (
@@ -43,7 +44,7 @@ const App = () => {
           />
           ;{/* <Messages />; */}
           <Route
-            path="/Posts"
+            path="/"
             element={
               <Posts
                 posts={posts}
@@ -56,9 +57,9 @@ const App = () => {
             }
           />
           <Route
-            path="/makePost"
+            path="/MakePost"
             element={
-              <Posts
+              <MakePost
                 posts={posts}
                 setPosts={setPosts}
                 loading={loading}

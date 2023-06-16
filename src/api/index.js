@@ -92,13 +92,14 @@ export const loginUser = async (username, password) => {
 // POST SECTION
 
 // fetching POSTs to show the data on the page
-export const fetchPosts = async () => {
-  // setIsLoading(true);
+export const fetchPosts = async (token) => {
+ 
   try {
     const response = await fetch(`${BASE_URL}/posts`, {
       method: "GET",
       headers: {
         "Content-type": "Application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     const result = await response.json();
@@ -117,6 +118,7 @@ export const makePost = async (
   title,
   description,
   price,
+  location,
   willDeliver
 ) => {
   try {
@@ -131,13 +133,14 @@ export const makePost = async (
           title,
           description,
           price,
+          location,
           willDeliver,
         },
       }),
     });
     const result = await response.json();
     console.log(result);
-    return result;
+    return result.data;
   } catch (err) {
     console.error(err);
   }
@@ -175,19 +178,24 @@ export const makePost = async (
 // };
 
 // // Deleting a post component
-// const deletePost = async () => {
-//   try {
-//     const response = await fetch(`${BASE_URL}/posts/5e8d1bd48829fb0017d2233b`, {
-//       method: "DELETE",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${TOKEN_STRING_HERE}`,
-//       },
-//     });
-//     const result = await response.json();
-//     console.log(result);
-//     return result;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+export const deletePost = async (postId, token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/posts/${postId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log(result);
+      return result.data;
+    } else {
+      throw new Error("Failed to delete post");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};

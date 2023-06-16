@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
 export const loginForm = ({ token, setToken, loading, setLoading }) => {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,12 +22,12 @@ export const loginForm = ({ token, setToken, loading, setLoading }) => {
     const loginData = async () => {
       try {
         const result = await loginUser(username, password);
-        localStorage.setItem("token", JSON.stringify(result.token));
+        localStorage.setItem("token", result.token);
         setToken(result.token);
         setUsername("");
         setPassword("");
       } catch (error) {
-        setErrorMessage(error.message);
+        setErrorMessage(error?.message || "An error occurred");
         console.log(error);
       } finally {
         setLoading(false);
@@ -34,15 +36,12 @@ export const loginForm = ({ token, setToken, loading, setLoading }) => {
     loginData();
   };
 
-  const handleChange = (event) => {
-    setUsername(event.target.value);
-    //console.log(setUsername);
-  };
-
-  if (token) {
-    const navigate = useNavigate();
-    navigate("/Posts");
-  }
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+    return () =>{};
+  }, [navigate, token]);
 
   return (
     <div id="container">
@@ -54,7 +53,7 @@ export const loginForm = ({ token, setToken, loading, setLoading }) => {
           type="text"
           name="username"
           value={username}
-          onChange={handleChange}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <label htmlFor="password">Password:</label>
