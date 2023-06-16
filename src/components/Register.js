@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { registerUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
-export const registerNew = ({ token, setToken, loading, setLoading }) => {
+export const RegisterNew = ({ token, setToken, loading, setLoading }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { fetchPosts, deletePost } from "../api";
 
-export const renderAllPosts = ({ posts, setPosts, currentUser }) => {
+export const RenderAllPosts = ({ posts, setPosts, currentUser }) => {
   useEffect(() => {
     const fetchPostsData = async () => {
       try {

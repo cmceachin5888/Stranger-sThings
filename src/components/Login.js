@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
-export const loginForm = ({ token, setToken, loading, setLoading }) => {
+export const LoginForm = ({ token, setToken, loading, setLoading }) => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { makePost } from "../api";
 
-export const newPostForm = ({
+export const NewPostForm = ({
   // loading,
   setLoading,
   // isLoggedIn,
