@@ -16,14 +16,17 @@ import {
 const App = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
 
   useEffect(() => {
-    const storage = localStorage.getItem("token");
-    setToken(storage);
-  }, []);
+    localStorage.setItem("token", token);
+  }, [token]);
+
+  useEffect(() => {
+    localStorage.setItem("userId", userId);
+  }, [userId]);
 
   return (
     <BrowserRouter>
@@ -39,6 +42,8 @@ const App = () => {
                 setToken={setToken}
                 loading={loading}
                 setLoading={setLoading}
+                setIsLoggedIn={setIsLoggedIn}
+                setUserId={setUserId}
               />
             }
           />
@@ -53,8 +58,7 @@ const App = () => {
                 setLoading={setLoading}
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
-                currentUser={currentUser}
-                setCurrentUser={setCurrentUser}
+                userId={userId}
               />
             }
           />
@@ -68,6 +72,7 @@ const App = () => {
                 setLoading={setLoading}
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
+                userId={userId}
               />
             }
           />

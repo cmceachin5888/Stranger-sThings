@@ -7,15 +7,17 @@ const RegisterNew = ({ token, setToken, loading, setLoading }) => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
-    // const username = event.target.username.value;
+
+    event.preventDefault();
+
     if (!username || !password) {
       return;
     }
 
     setLoading(true);
-
-    event.preventDefault();
 
     const registerData = async () => {
       try {
@@ -24,6 +26,8 @@ const RegisterNew = ({ token, setToken, loading, setLoading }) => {
         setToken(result.token);
         setUsername("");
         setPassword("");
+        setErrorMessage("");
+        navigate("/");
       } catch (error) {
         setErrorMessage(error.message);
         console.log(error);
@@ -34,15 +38,11 @@ const RegisterNew = ({ token, setToken, loading, setLoading }) => {
     registerData();
   };
 
-  const handleChange = (event) => {
-    setUsername(event.target.value);
-    //console.log(setUsername);
-  };
 
-  if (result.token) {
-    const navigate = useNavigate();
-    navigate("/Posts");
-  }
+  // if (result.token) {
+  //   const navigate = useNavigate();
+  //   navigate("/");
+  // }
 
   return (
     <div id="container">
@@ -54,7 +54,7 @@ const RegisterNew = ({ token, setToken, loading, setLoading }) => {
           type="text"
           name="username"
           value={username}
-          onChange={handleChange}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <label htmlFor="password">Create a Password:</label>

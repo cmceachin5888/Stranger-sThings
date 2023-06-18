@@ -89,6 +89,26 @@ export const loginUser = async (username, password) => {
 //     }
 //   }
 
+
+export const fetchUserData = async (token) => {
+  
+  try {
+    const response = await fetch(`${BASE_URL}/users/me`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const result = await response.json();
+    console.log(result);
+    return result;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+
 // POST SECTION
 
 // fetching POSTs to show the data on the page
@@ -178,7 +198,7 @@ export const makePost = async (
 // };
 
 // // Deleting a post component
-export const deletePost = async (postId, token) => {
+export const deletePost = async (token, postId) => {
   try {
     const response = await fetch(`${BASE_URL}/posts/${postId}`, {
       method: "DELETE",

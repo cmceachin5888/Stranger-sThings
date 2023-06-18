@@ -2,46 +2,44 @@ import React, { useState, useEffect } from "react";
 import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
-const LoginForm = ({ token, setToken, loading, setLoading }) => {
+const LoginForm = ({ token, setToken, loading, setLoading, setIsLoggedIn }) => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (event) => {
-    // const username = event.target.username.value;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     if (!username || !password) {
       return;
     }
 
     setLoading(true);
 
-    event.preventDefault();
-
-    const loginData = async () => {
-      try {
-        const result = await loginUser(username, password);
-        localStorage.setItem("token", result.token);
-        setToken(result.token);
-        setUsername("");
-        setPassword("");
-      } catch (error) {
-        setErrorMessage(error?.message || "An error occurred");
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loginData();
+    try {
+      const result = await loginUser(username, password);
+      localStorage.setItem("token", result.token);
+      setToken(result.token);
+      setIsLoggedIn(true);
+      setUsername("");
+      setPassword("");
+      navigate("/");
+    } catch (error) {
+      setErrorMessage(error?.message || "An error occurred");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       navigate("/");
     }
-    return () =>{};
-  }, [navigate, token]);
+  }, [navigate]);
 
   return (
     <div id="container">
@@ -49,7 +47,7 @@ const LoginForm = ({ token, setToken, loading, setLoading }) => {
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input
-          placeholder={"Username"}
+          placeholder="Username"
           type="text"
           name="username"
           value={username}
@@ -58,7 +56,7 @@ const LoginForm = ({ token, setToken, loading, setLoading }) => {
         />
         <label htmlFor="password">Password:</label>
         <input
-          placeholder={"Password"}
+          placeholder="Password"
           type="password"
           name="password"
           value={password}
