@@ -10,7 +10,6 @@ const RegisterNew = ({ token, setToken, loading, setLoading }) => {
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
-
     event.preventDefault();
 
     if (!username || !password) {
@@ -33,16 +32,11 @@ const RegisterNew = ({ token, setToken, loading, setLoading }) => {
         console.log(error);
       } finally {
         setLoading(false);
+        alert("Thank you for signing up!");
       }
     };
     registerData();
   };
-
-
-  // if (result.token) {
-  //   const navigate = useNavigate();
-  //   navigate("/");
-  // }
 
   return (
     <div id="container">

@@ -18,7 +18,8 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || ""); //not sure I understand the purpose of this?
+  const [postId, setPostId] = useState("");
 
   useEffect(() => {
     localStorage.setItem("token", token);
@@ -32,8 +33,11 @@ const App = () => {
     <BrowserRouter>
       {/*Using path='/' in order to make it the home page when you login*/}
       <div className="app">
-        <Navbar 
-          token={token} setToken={setToken} setIsLoggedIn={setIsLoggedIn} />
+        <Navbar
+          token={token}
+          setToken={setToken}
+          setIsLoggedIn={setIsLoggedIn}
+        />
         <Routes>
           <Route
             path="/Login"
@@ -61,11 +65,27 @@ const App = () => {
                 setIsLoggedIn={setIsLoggedIn}
                 userId={userId}
                 setUserId={setUserId}
+                postId={postId}
+                setPostId={setPostId}
               />
             }
           />
           <Route
             path="/MakePost"
+            element={
+              <MakePost
+                posts={posts}
+                setPosts={setPosts}
+                loading={loading}
+                setLoading={setLoading}
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+                userId={userId}
+              />
+            }
+          />
+          <Route
+            path="/UpdatePost"
             element={
               <MakePost
                 posts={posts}

@@ -69,7 +69,7 @@ export const loginUser = async (username, password) => {
     result = await response.json();
     console.log(result);
   } catch (err) {
-    throw new Error("Trouble Loggin In");
+    throw new Error("Trouble Logging In");
   }
   if (!result.success) {
     throw new Error(result.error.message);
@@ -81,13 +81,12 @@ export const loginUser = async (username, password) => {
 // get user data when logged in
 
 export const fetchUserData = async (token) => {
-
   try {
     const response = await fetch(`${BASE_URL}/users/me`, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
     const result = await response.json();
     console.log(result);
@@ -96,8 +95,6 @@ export const fetchUserData = async (token) => {
     console.error(err);
   }
 };
-
-
 
 // POST SECTION
 
@@ -156,35 +153,48 @@ export const makePost = async (
 };
 
 // //editing a post if you have authored it
-// export const updatePost = async () => {
-//   try {
-//     // You will need to insert a variable into the fetch template literal
-//     // in order to make the POST_ID dynamic.
-//     // 5e8d1bd48829fb0017d2233b is just for demonstration.
-//     const response = await fetch(`${BASE_URL}/posts/5e8d1bd48829fb0017d2233b`, {
-//       method: "PATCH",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${TOKEN_STRING_HERE}`,
-//       },
-//       body: JSON.stringify({
-//         post: {
-//           title: "My favorite stuffed animal",
-//           description:
-//             "This is a pooh doll from 1973. It has been carefully taken care of since I first got it.",
-//           price: "$480.00",
-//           location: "New York, NY",
-//           willDeliver: true,
-//         },
-//       }),
-//     });
-//     const result = await response.json();
-//     console.log(result);
-//     return result;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+export const updatePost = async (
+  postId,
+  token,
+  title,
+  description,
+  price,
+  location,
+  willDeliver
+) => {
+  let result;
+
+  try {
+    // You will need to insert a variable into the fetch template literal
+    // in order to make the POST_ID dynamic.
+    // 5e8d1bd48829fb0017d2233b is just for demonstration.
+    const response = await fetch(`${BASE_URL}/posts/${postId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        post: {
+          title,
+          description,
+          price,
+          location,
+          willDeliver,
+        },
+      }),
+    });
+    result = await response.json();
+    console.log(result);
+  } catch (err) {
+    throw new Error("Failed to update post");
+  }
+  console.log(result);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  return result.data;
+};
 
 // // Deleting a post component
 export const deletePost = async (token, postId) => {

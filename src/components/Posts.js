@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { fetchPosts, deletePost, fetchUserData } from "../api"; 
+import React, { useEffect } from "react";
+import { fetchPosts, deletePost, fetchUserData } from "../api";
+import { useNavigate } from "react-router-dom";
 
-const RenderAllPosts = ({ 
+const RenderAllPosts = ({
   posts,
   setPosts,
   isLoading,
@@ -9,20 +10,22 @@ const RenderAllPosts = ({
   isLoggedIn,
   setIsLoggedIn,
   userId,
-  setUserId }) => {
-
-
+  setUserId,
+  postId,
+  setPostId,
+}) => {
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchPostsData = async () => {
       try {
         const token = localStorage.getItem("token");
-    
+
         if (token) {
           setIsLoggedIn(true);
           const userData = await fetchUserData(token);
-          setUserId(userData.data._id);
+          setUserId(userData.data._id); //trying to understand if this is the right field?
         }
-    
+
         const result = await fetchPosts(token);
 
         setPosts(result);
@@ -31,15 +34,26 @@ const RenderAllPosts = ({
         console.error(error);
       }
     };
-      
+
     fetchPostsData();
   }, []);
-  
+
   const handleDelete = async (postId) => {
     try {
       const token = localStorage.getItem("token");
       await deletePost(token, postId);
       setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
+  const handleUpdate = async (postId) => {
+    try {
+      const token = localStorage.getItem("token");
+      setPostId((post) => {
+        post._id === postId;
+      });
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -63,10 +77,13 @@ const RenderAllPosts = ({
           <div className="posts" key={post._id}>
             <h3>{post.title}</h3>
             <div>{post.author?.username || "Unknown"}</div>
-            <div>{post.description}</div>
-            <div>{post.price}</div>
-            <div>{post.location}</div>
-            <div>{post.willDeliver ? "Will Deliver" : "No Delivery"}</div>
+            <div>Description: {post.description}</div>
+            <div>Price: {post.price}</div>
+            <div>Location: {post.location}</div>
+            <div>
+              Will Deliver?:{" "}
+              {post.willDeliver ? "Will Deliver" : "Will NOT deliver"}
+            </div>
 
             {/* {isAuthor && post.messages && (
               <div>
@@ -82,8 +99,21 @@ const RenderAllPosts = ({
 
             {isLoggedIn && isAuthor && (
               <>
-                <button onClick={() => handleDelete(post._id)}>Delete Post</button>
-                <button>See Messages</button>
+                <button
+                  onClick={() => {
+                    handleDelete(post._id);
+                  }}
+                >
+                  Delete Post
+                </button>
+                <button
+                  onClick={() => {
+                    handleUpdate(post._id);
+                    navigate("/UpdatePost");
+                  }}
+                >
+                  Update Post
+                </button>
               </>
             )}
 

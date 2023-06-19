@@ -34,12 +34,12 @@ const LoginForm = ({ token, setToken, loading, setLoading, setIsLoggedIn }) => {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     navigate("/");
+  //   }
+  // }, []);
 
   return (
     <div id="container">

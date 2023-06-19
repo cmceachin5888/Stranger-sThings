@@ -1,12 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = ({ token, setToken, setIsLoggedIn }) => {
+  const navigate = useNavigate();
+
   const logout = () => {
     setToken("");
     localStorage.removeItem("token");
     setIsLoggedIn(false); // Add this line
     console.log("Logged out");
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/Login");
+    }
   };
 
   return (

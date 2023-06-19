@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { makePost } from "../api";
+import { updatePost } from "../api";
 import { useNavigate } from "react-router-dom";
 
-const NewPostForm = ({
+const UpdatePostForm = ({
   // loading,
   setLoading,
-  // isLoggedIn,
-  // setIsLoggedIn,
+  isLoggedIn,
+  setIsLoggedIn,
   posts,
   setPosts,
 }) => {
@@ -24,13 +24,16 @@ const NewPostForm = ({
       return;
     }
 
+    setIsLoggedIn(true);
     setLoading(true);
     event.preventDefault();
 
-    const makePostData = async () => {
-      const token = localStorage.getItem("token");
+    const updatePostData = async () => {
       try {
-        const result = await makePost(
+        const token = localStorage.getItem("token");
+
+        const result = await updatePost(
+          postId,
           token,
           title,
           description,
@@ -39,13 +42,13 @@ const NewPostForm = ({
           willDeliver
         );
 
-        console.log("New post result:", result);
+        console.log("Updated result:", result);
 
-        const newPosts = [...posts, result];
-        console.log("Previous posts:", posts);
-        console.log("New posts:", newPosts);
+        const updatePosts = [...posts, result];
+        // console.log("Previous posts:", posts);
+        // console.log("New posts:", newPosts);
 
-        setPosts(newPosts);
+        setPosts(updatePosts);
         setTitle("");
         setDescription("");
         setPrice("");
@@ -58,14 +61,12 @@ const NewPostForm = ({
         navigate("/");
       }
     };
-    makePostData();
+    updatePostData();
   };
 
   return (
     <div id="container">
-      <div id="navbar">
-        Feel free to add your new product here! Fields with star are required.
-      </div>
+      <div id="navbar">Feel free to update your post!</div>
       <form onSubmit={handleSubmit}>
         <label htmlFor="Title">*Title:</label>
         <input
@@ -111,11 +112,11 @@ const NewPostForm = ({
           checked={willDeliver}
           onChange={(event) => setWillDeliver(event.target.checked)}
         />
-        <button type="submit">Submit Post</button>
+        <button type="submit">Update Post</button>
       </form>
-      {/* <div>{errorMessage}</div> */}
+      <div>{alert(errorMessage)}</div>
     </div>
   );
 };
 
-export default NewPostForm;
+export default UpdatePostForm;
