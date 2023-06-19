@@ -40,8 +40,7 @@ export const registerUser = async (username, password) => {
   } catch (err) {
     throw new Error("Register User API down");
   }
-  // You can log ▲▲▲ the result
-  // here ▼▼▼ to view the json object before returning it
+
   console.log(result);
   if (!result.success) {
     throw new Error(result.error.message);
@@ -79,19 +78,10 @@ export const loginUser = async (username, password) => {
   return result.data;
 };
 
-// Sample Result of if it worked:
-//   {
-//     "success": true,
-//     "error": null,
-//     "data": {
-//       "token": "xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTg5MDY2ZGQ0MzkxNjAwTc1NTNlMDUiLCJ1c2VybmFtZSI6Im1hdHQiLCJpYXQiOjE1ODYwMzgzODF9.CTj4owBl0PB-G6G4E_1l6DS6_cVc0iKcMzBIWFUYM1p",
-//       "message": "Thanks for signing up for our service."
-//     }
-//   }
-
+// get user data when logged in
 
 export const fetchUserData = async (token) => {
-  
+
   try {
     const response = await fetch(`${BASE_URL}/users/me`, {
       headers: {
@@ -113,7 +103,6 @@ export const fetchUserData = async (token) => {
 
 // fetching POSTs to show the data on the page
 export const fetchPosts = async (token) => {
- 
   try {
     const response = await fetch(`${BASE_URL}/posts`, {
       method: "GET",

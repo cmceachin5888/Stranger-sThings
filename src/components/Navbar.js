@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = ({ token, setToken }) => {
+const Navbar = ({ token, setToken, setIsLoggedIn }) => {
   const logout = () => {
     setToken("");
     localStorage.removeItem("token");
+    setIsLoggedIn(false); // Add this line
+    console.log("Logged out");
   };
 
   return (

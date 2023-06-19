@@ -36,8 +36,14 @@ const NewPostForm = ({
           location,
           willDeliver
         );
-
-        setPosts([...posts, result]);
+    
+        console.log("New post result:", result);
+    
+        const newPosts = [...posts, result];
+        console.log("Previous posts:", posts);
+        console.log("New posts:", newPosts);
+    
+        setPosts(newPosts);
         setTitle("");
         setDescription("");
         setPrice("");

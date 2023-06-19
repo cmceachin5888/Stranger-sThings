@@ -1,32 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { fetchPosts, deletePost, fetchUserData } from "../api"; 
 
-const RenderAllPosts = () => {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState("");
+const RenderAllPosts = ({ 
+  posts,
+  setPosts,
+  isLoading,
+  setLoading,
+  isLoggedIn,
+  setIsLoggedIn,
+  userId,
+  setUserId }) => {
+
 
   useEffect(() => {
     const fetchPostsData = async () => {
       try {
         const token = localStorage.getItem("token");
+    
         if (token) {
           setIsLoggedIn(true);
-          const userData = await fetchUserData(token); 
-          setUserId(userData.data._id); 
+          const userData = await fetchUserData(token);
+          setUserId(userData.data._id);
         }
-        console.log("Token:", token);
+    
         const result = await fetchPosts(token);
+
         setPosts(result);
-        setIsLoading(false);
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
-
+      
     fetchPostsData();
   }, []);
+  
   const handleDelete = async (postId) => {
     try {
       const token = localStorage.getItem("token");
@@ -41,9 +49,6 @@ const RenderAllPosts = () => {
     return <p>Loading posts...</p>;
   }
 
-  console.log("isLoggedIn:", isLoggedIn);
-  console.log("posts:", posts);
-
   return (
     <>
       <h1>Posts</h1>
@@ -52,10 +57,7 @@ const RenderAllPosts = () => {
           return null;
         }
 
-        const isAuthor = post.author._id === userId;
-
-        console.log("Logged-in User ID:", userId);
-        console.log("Author ID:", post.author._id);
+        const isAuthor = post.author?._id === userId;
 
         return (
           <div className="posts" key={post._id}>
@@ -78,14 +80,14 @@ const RenderAllPosts = () => {
               </div>
             )} */}
 
-            {isAuthor && (
+            {isLoggedIn && isAuthor && (
               <>
                 <button onClick={() => handleDelete(post._id)}>Delete Post</button>
                 <button>See Messages</button>
               </>
             )}
 
-            {!isAuthor && (
+            {isLoggedIn && !isAuthor && (
               <>
                 <button>Contact Seller</button>
                 <button>Make Offer</button>

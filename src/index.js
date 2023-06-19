@@ -32,7 +32,8 @@ const App = () => {
     <BrowserRouter>
       {/*Using path='/' in order to make it the home page when you login*/}
       <div className="app">
-        <Navbar token={token} setToken={setToken} />
+        <Navbar 
+          token={token} setToken={setToken} setIsLoggedIn={setIsLoggedIn} />
         <Routes>
           <Route
             path="/Login"
@@ -47,7 +48,7 @@ const App = () => {
               />
             }
           />
-          ;{/* <Messages />; */}
+          {/* <Messages />; */}
           <Route
             path="/"
             element={
@@ -59,6 +60,7 @@ const App = () => {
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
                 userId={userId}
+                setUserId={setUserId}
               />
             }
           />
