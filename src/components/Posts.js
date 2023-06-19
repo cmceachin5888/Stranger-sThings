@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchPosts, deletePost, fetchUserData } from "../api";
 import { useNavigate } from "react-router-dom";
 
@@ -11,10 +11,9 @@ const RenderAllPosts = ({
   setIsLoggedIn,
   userId,
   setUserId,
-  postId,
-  setPostId,
 }) => {
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchPostsData = async () => {
       try {
@@ -23,7 +22,7 @@ const RenderAllPosts = ({
         if (token) {
           setIsLoggedIn(true);
           const userData = await fetchUserData(token);
-          setUserId(userData.data._id); //trying to understand if this is the right field?
+          setUserId(userData.data._id);
         }
 
         const result = await fetchPosts(token);
@@ -48,15 +47,8 @@ const RenderAllPosts = ({
     }
   };
 
-  const handleUpdate = async (postId) => {
-    try {
-      const token = localStorage.getItem("token");
-      setPostId((post) => {
-        post._id === postId;
-      });
-    } catch (error) {
-      console.error("Error deleting post:", error);
-    }
+  const handleUpdate = (postId) => {
+    navigate(`/UpdatePost/${postId}`);
   };
 
   if (isLoading) {
@@ -85,18 +77,6 @@ const RenderAllPosts = ({
               {post.willDeliver ? "Will Deliver" : "Will NOT deliver"}
             </div>
 
-            {/* {isAuthor && post.messages && (
-              <div>
-                <h4>Messages</h4>
-                {post.messages.map((message) => (
-                  <div key={message._id}>
-                    <div>{message.content}</div>
-                    <div>{message.fromUser?.username}</div>
-                  </div>
-                ))}
-              </div>
-            )} */}
-
             {isLoggedIn && isAuthor && (
               <>
                 <button
@@ -109,7 +89,6 @@ const RenderAllPosts = ({
                 <button
                   onClick={() => {
                     handleUpdate(post._id);
-                    navigate("/UpdatePost");
                   }}
                 >
                   Update Post

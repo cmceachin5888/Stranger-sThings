@@ -7,6 +7,7 @@ import {
   // Messages,
   Posts,
   MakePost,
+  UpdatePost,
   // Profile
   Register,
   // LoggedOut,
@@ -18,7 +19,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState(localStorage.getItem("userId") || ""); //not sure I understand the purpose of this?
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
   const [postId, setPostId] = useState("");
 
   useEffect(() => {
@@ -31,13 +32,8 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {/*Using path='/' in order to make it the home page when you login*/}
       <div className="app">
-        <Navbar
-          token={token}
-          setToken={setToken}
-          setIsLoggedIn={setIsLoggedIn}
-        />
+        <Navbar token={token} setToken={setToken} setIsLoggedIn={setIsLoggedIn} />
         <Routes>
           <Route
             path="/Login"
@@ -52,7 +48,6 @@ const App = () => {
               />
             }
           />
-          {/* <Messages />; */}
           <Route
             path="/"
             element={
@@ -85,20 +80,18 @@ const App = () => {
             }
           />
           <Route
-            path="/UpdatePost"
+            path="/UpdatePost/:postId"
             element={
-              <MakePost
-                posts={posts}
-                setPosts={setPosts}
-                loading={loading}
+              <UpdatePost
+                postId={postId}
                 setLoading={setLoading}
                 isLoggedIn={isLoggedIn}
                 setIsLoggedIn={setIsLoggedIn}
-                userId={userId}
+                posts={posts}
+                setPosts={setPosts}
               />
             }
           />
-          {/* <Profile /> */}
           <Route
             path="/Register"
             element={
@@ -110,7 +103,6 @@ const App = () => {
               />
             }
           />
-          {/* {isLoading ? <Loading /> : null} */}
         </Routes>
       </div>
     </BrowserRouter>
