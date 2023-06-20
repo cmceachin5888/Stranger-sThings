@@ -33,7 +33,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="app">
-        <Navbar token={token} setToken={setToken} setIsLoggedIn={setIsLoggedIn} />
+        <Navbar
+          token={token}
+          setToken={setToken}
+          setIsLoggedIn={setIsLoggedIn}
+        />
         <Routes>
           <Route
             path="/Login"
@@ -105,9 +109,20 @@ const App = () => {
           />
           <Route
             path="/PostMessage/:postId"
+            element={<MakePostMessages userId={userId} />}
+          />
+          <Route
+            path="/Profile"
             element={
-              <MakePostMessages
-                userId={userId}
+              <Profile
+                token={token}
+                setToken={setToken}
+                // postId={postId}
+                // setLoading={setLoading}
+                // isLoggedIn={isLoggedIn}
+                // setIsLoggedIn={setIsLoggedIn}
+                // posts={posts}
+                // setPosts={setPosts}
               />
             }
           />

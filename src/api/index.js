@@ -92,7 +92,7 @@ export const fetchUserData = async (token) => {
     });
     const result = await response.json();
     console.log(result);
-    return result;
+    return result.data;
   } catch (err) {
     console.error(err);
   }
@@ -218,7 +218,6 @@ export const deletePost = async (token, postId) => {
   }
 };
 
-
 // Messages area
 
 export const postMessage = async (postId, token, message) => {
@@ -229,10 +228,10 @@ export const postMessage = async (postId, token, message) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         message: {
-          content: message
-        }
+          content: message,
+        },
       }),
     });
 
@@ -243,10 +242,3 @@ export const postMessage = async (postId, token, message) => {
     console.error(err);
   }
 };
-
-
-
-
-
-
-

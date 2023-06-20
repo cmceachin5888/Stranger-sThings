@@ -23,6 +23,7 @@ const Navbar = ({ token, setToken, setIsLoggedIn }) => {
         {!token ? <Link to="/Login">Login</Link> : null}
         {!token ? <Link to="/Register">Register</Link> : null}
         {token ? <Link to="/MakePost">New Post</Link> : null}
+        {token ? <Link to="/Profile">Profile</Link> : null}
         {token ? <a onClick={logout}>Logout?</a> : null}
       </div>
     </div>
