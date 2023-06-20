@@ -1,52 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { fetchUserData } from "../api";
-import { useNavigate } from "react-router-dom";
 
 const Profile = ({
-  // posts,
-  // setPosts,
-  // isLoading,
-  // setLoading,
-  // isLoggedIn,
-  // setIsLoggedIn,
-  // userId,
-  // setUserId,
   token,
-  setToken,
+  userData,
+  setUserData,
+  messagesToUser,
+  setMessagesToUser,
+  messagesFromUser,
+  setMessagesFromUser,
 }) => {
-  const navigate = useNavigate();
-  const [messagesToUser, setMessagesToUser] = useState([]);
-  const [messagesFromUser, setMessagesFromUser] = useState([]);
-
   useEffect(() => {
-    const fetchMyMessagesData = async () => {
+    const fetchData = async () => {
       try {
-        const userData = fetchUserData(token);
-        const { messages } = userData;
-        const messagesToUser = messages.filter(
-          (message) => message.fromUser._id !== userData._id
-        );
-        const messagesFromUser = messages.filter(
-          (message) => message.fromUser._id !== userData._id
-        );
-        setMessagesToUser(messagesToUser);
-        setMessagesFromUser(messagesFromUser);
+        const response = await fetchUserData(token);
+        if (response.success) {
+          const { data, messages } = response;
+          setUserData(data);
 
-        // if (token) {
-        //   setIsLoggedIn(true);
-        //   const userData = await fetchUserData(token);
-        //   setUserId(userData.data._id);
-        //   setMessages(userData.messages);
-        // }
+          if (messages && Array.isArray(messages)) {
+            const messagesToCurrentUser = messages.filter(
+              (message) => message.toUser._id === data._id
+            );
 
-        // const result = await fetchPosts(token);
+            const messagesFromCurrentUser = messages.filter(
+              (message) => message.fromUser._id === data._id
+            );
+
+            setMessagesToUser(messagesToCurrentUser);
+            setMessagesFromUser(messagesFromCurrentUser);
+          } else {
+            console.log("No messages found or messages is not an array");
+          }
+        } else {
+          console.log("Failed to fetch user data:", response.error);
+        }
       } catch (error) {
-        console.error("Error loading user messages", error);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchMyMessagesData();
-  }, [token]);
+    if (token) {
+      fetchData();
+    }
+  }, [token, setUserData, setMessagesToUser, setMessagesFromUser]);
 
   return (
     <div>

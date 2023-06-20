@@ -90,14 +90,27 @@ export const fetchUserData = async (token) => {
         Authorization: `Bearer ${token}`,
       },
     });
+
     const result = await response.json();
-    console.log(result);
-    return result.data;
+    const userData = result;
+
+    // Fetch messages between user and post authors
+    const messagesResponse = await fetch(`${BASE_URL}/users/me/messages`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const messagesResult = await messagesResponse.json();
+    userData.messages = messagesResult;
+
+    console.log(userData);
+    return userData;
   } catch (err) {
     console.error(err);
   }
 };
-
 // POST SECTION
 
 // fetching POSTs to show the data on the page

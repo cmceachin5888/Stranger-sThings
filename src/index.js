@@ -7,8 +7,9 @@ import {
   MakePostMessages,
   Posts,
   MakePost,
+  ViewPost,
   UpdatePost,
-  // Profile
+  Profile,
   Register,
   // LoggedOut,
   Navbar,
@@ -21,6 +22,9 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
   const [postId, setPostId] = useState("");
+  const [messagesToUser, setMessagesToUser] = useState([]);
+  const [messagesFromUser, setMessagesFromUser] = useState([]);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("token", token);
@@ -66,6 +70,8 @@ const App = () => {
                 setUserId={setUserId}
                 postId={postId}
                 setPostId={setPostId}
+                userData={userData}
+                setUserData={setUserData}
               />
             }
           />
@@ -116,13 +122,21 @@ const App = () => {
             element={
               <Profile
                 token={token}
-                setToken={setToken}
-                // postId={postId}
-                // setLoading={setLoading}
-                // isLoggedIn={isLoggedIn}
-                // setIsLoggedIn={setIsLoggedIn}
-                // posts={posts}
-                // setPosts={setPosts}
+                userData={userData}
+                setUserData={setUserData}
+                messagesToUser={messagesToUser}
+                messagesFromUser={messagesFromUser}
+                setMessagesToUser={setMessagesToUser}
+                setMessagesFromUser={setMessagesFromUser}
+              />
+            }
+          />
+          <Route
+            path="/ViewPost/:postId"
+            element={
+              <ViewPost
+                token={token}
+                isLoggedIn={isLoggedIn}
               />
             }
           />

@@ -25,7 +25,7 @@ const LoginForm = ({ token, setToken, loading, setLoading, setIsLoggedIn }) => {
       setIsLoggedIn(true);
       setUsername("");
       setPassword("");
-      navigate("/");
+      navigate("/Profile");
     } catch (error) {
       setErrorMessage(error?.message || "An error occurred");
       console.log(error);
