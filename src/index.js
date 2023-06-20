@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import {
   Login,
-  // Messages,
+  MakePostMessages,
   Posts,
   MakePost,
   UpdatePost,
@@ -100,6 +100,14 @@ const App = () => {
                 setToken={setToken}
                 loading={loading}
                 setLoading={setLoading}
+              />
+            }
+          />
+          <Route
+            path="/PostMessage/:postId"
+            element={
+              <MakePostMessages
+                userId={userId}
               />
             }
           />

@@ -47,8 +47,12 @@ const RenderAllPosts = ({
     }
   };
 
-  const handleUpdate = (postId) => {
+  const handlePostUpdate = (postId) => {
     navigate(`/UpdatePost/${postId}`);
+  };
+
+  const handleMessageUpdate = (postId) => {
+    navigate(`/PostMessage/${postId}`);
   };
 
   if (isLoading) {
@@ -88,7 +92,7 @@ const RenderAllPosts = ({
                 </button>
                 <button
                   onClick={() => {
-                    handleUpdate(post._id);
+                    handlePostUpdate(post._id);
                   }}
                 >
                   Update Post
@@ -98,8 +102,13 @@ const RenderAllPosts = ({
 
             {isLoggedIn && !isAuthor && (
               <>
-                <button>Contact Seller</button>
-                <button>Make Offer</button>
+                <button
+                  onClick={() => {
+                    handleMessageUpdate(post._id);
+                  }}
+                >
+                  Message Seller
+                </button>
               </>
             )}
           </div>

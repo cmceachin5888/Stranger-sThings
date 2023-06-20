@@ -1,5 +1,5 @@
 export { default as Login } from "./Login";
-export { default as Messages } from "./Messages";
+export { default as MakePostMessages } from "./MakePostMessages";
 export { default as Posts } from "./Posts";
 export { default as MakePost } from "./MakePost";
 export { default as UpdatePost } from "./UpdatePost";

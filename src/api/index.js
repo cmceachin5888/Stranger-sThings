@@ -1,5 +1,7 @@
 /* This file features and exports all of our calls to the API*/
 
+import { toKeyAlias } from "@babel/types";
+
 export const COHORT_NAME = "2303-FTB-ET-WEB-PT";
 export const BASE_URL = `https://strangers-things.herokuapp.com/api/${COHORT_NAME}`;
 
@@ -215,3 +217,36 @@ export const deletePost = async (token, postId) => {
     console.error(error);
   }
 };
+
+
+// Messages area
+
+export const postMessage = async (postId, token, message) => {
+  try {
+    const response = await fetch(`${BASE_URL}/posts/${postId}/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ 
+        message: {
+          content: message
+        }
+      }),
+    });
+
+    const result = await response.json();
+    console.log(result);
+    return result.data.message;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+
+
+
+
+
