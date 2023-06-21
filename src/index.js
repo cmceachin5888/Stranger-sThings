@@ -12,7 +12,7 @@ import {
   ViewPost,
   MakePost,
   UpdatePost,
-  // Search,
+  Search,
 } from "./components";
 
 const App = () => {
@@ -31,11 +31,7 @@ const App = () => {
     <BrowserRouter>
       <div className="app">
         <Navbar token={token} setToken={setToken} />
-        {/* <Search
-          posts={posts}
-          isLoggedIn={isLoggedIn}
-          setIsLoggedIn={setIsLoggedIn}
-        /> */}
+        <Search />
         <Routes>
           <Route
             path="/Register"
