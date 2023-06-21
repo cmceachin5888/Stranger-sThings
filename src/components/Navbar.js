@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link } from "@mui/material";
 
 const Navbar = ({ token, setToken }) => {
   const navigate = useNavigate();
@@ -17,14 +18,54 @@ const Navbar = ({ token, setToken }) => {
   };
 
   return (
-    <div id="container">
-      <div id="navbar">
-        <Link to="/">Posts</Link>
-        {!token ? <Link to="/Login">Login</Link> : null}
-        {!token ? <Link to="/Register">Register</Link> : null}
-        {token ? <Link to="/MakePost">New Post</Link> : null}
-        {token ? <Link to="/Profile">Profile</Link> : null}
-        {token ? <a onClick={logout}>Logout?</a> : null}
+    <div id="mainNav">
+      <div id="navbartitle">
+        Stranger Things
+        <div id="navbarlink">
+          <Link component={RouterLink} to="/" underline="hover">
+            Posts
+          </Link>
+          {!token ? (
+            <Link
+              component={RouterLink}
+              to="/Login"
+              underline="hover"
+              color="red"
+            >
+              Login
+            </Link>
+          ) : null}
+          {!token ? (
+            <Link
+              component={RouterLink}
+              to="/Register"
+              underline="hover"
+              color="red"
+            >
+              Register
+            </Link>
+          ) : null}
+          {token ? (
+            <Link component={RouterLink} to="/MakePost" underline="hover">
+              New Post
+            </Link>
+          ) : null}
+          {token ? (
+            <Link
+              component={RouterLink}
+              to="/Profile"
+              underline="hover"
+              color="red"
+            >
+              Profile
+            </Link>
+          ) : null}
+          {token ? (
+            <a id="logout" onClick={logout}>
+              Logout?
+            </a>
+          ) : null}
+        </div>
       </div>
     </div>
   );

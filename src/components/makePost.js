@@ -57,8 +57,8 @@ const NewPostForm = ({ setLoading }) => {
   };
 
   return (
-    <div id="container">
-      <div id="navbar">
+    <div id="newpostcontainer">
+      <div id="newpostheader">
         Feel free to add your new product here! Fields with a star are required!
       </div>
       <Box
