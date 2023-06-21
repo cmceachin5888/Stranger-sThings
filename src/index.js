@@ -12,6 +12,7 @@ import {
   ViewPost,
   MakePost,
   UpdatePost,
+  SearchBar,
   Search,
 } from "./components";
 
@@ -23,23 +24,19 @@ const App = () => {
     localStorage.setItem("token", token);
   }, [token]);
 
-  // useEffect(() => {
-  //   localStorage.setItem("userId", userId);
-  // }, [userId]);
-
   return (
     <BrowserRouter>
       <div className="app">
         <Navbar token={token} setToken={setToken} />
-        {/* <Search
-          posts={posts}
-          isLoggedIn={isLoggedIn}
-          setIsLoggedIn={setIsLoggedIn}
-        /> */}
+        <SearchBar />
         <Routes>
           <Route
             path="/Register"
             element={<Register setToken={setToken} setLoading={setLoading} />}
+          />
+          <Route
+            path="/Search"
+            element={<Search />}
           />
           <Route
             path="/Login"

@@ -73,6 +73,7 @@ const ViewPost = ({ loading, setLoading }) => {
       console.error("couldn't fetch posts", err);
     } finally {
       setLoading(false);
+      setContent("");
     }
   };
 
@@ -114,7 +115,7 @@ const ViewPost = ({ loading, setLoading }) => {
   };
 
   const renderMessages = () => {
-    console.log(post);
+
     return (
       <div>
         <h3>Messages</h3>

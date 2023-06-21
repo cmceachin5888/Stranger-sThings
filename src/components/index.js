@@ -7,4 +7,5 @@ export { default as Posts } from "./Posts";
 export { default as ViewPost } from "./ViewPost";
 export { default as MakePost } from "./MakePost";
 export { default as UpdatePost } from "./UpdatePost";
+export { default as SearchBar } from "./SearchBar";
 export { default as Search } from "./Search";

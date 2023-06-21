@@ -11,7 +11,6 @@ const Profile = () => {
         const token = localStorage.getItem("token");
         if (token) {
           const response = await fetchUserData(token);
-          console.log(response);
 
           if (response.success) {
             const messages = response.data.messages;
