@@ -1,13 +1,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ token, setToken, setIsLoggedIn }) => {
+const Navbar = ({ token, setToken }) => {
   const navigate = useNavigate();
 
   const logout = () => {
     setToken("");
     localStorage.removeItem("token");
-    setIsLoggedIn(false); // Add this line
     alert("You are now Logged out!");
     console.log("You are now Logged out!");
 

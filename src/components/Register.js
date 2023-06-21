@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { registerUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
-const RegisterNew = ({ setToken, setLoading, setIsLoggedIn }) => {
+const RegisterNew = ({ setToken, setLoading }) => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -25,7 +25,6 @@ const RegisterNew = ({ setToken, setLoading, setIsLoggedIn }) => {
         setToken(result.token);
         setUsername("");
         setPassword("");
-        setIsLoggedIn(true);
         navigate("/Profile");
       } catch (error) {
         setErrorMessage(error?.message || "An error occurred");

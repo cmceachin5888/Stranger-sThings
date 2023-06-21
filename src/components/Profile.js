@@ -1,49 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchUserData } from "../api";
 
-const Profile = ({
-  token,
-  // userData,
-  setUserData,
-  messagesToUser,
-  setMessagesToUser,
-  messagesFromUser,
-  setMessagesFromUser,
-}) => {
+const Profile = () => {
+  const [messagesToUser, setMessagesToUser] = useState([]);
+  const [messagesFromUser, setMessagesFromUser] = useState([]);
+
   useEffect(() => {
     const fetchMessageData = async () => {
       try {
-        const response = await fetchUserData(token);
-        if (response.success) {
-          const { data, messages } = response;
-          setUserData(data);
+        const token = localStorage.getItem("token");
+        if (token) {
+          const response = await fetchUserData(token);
+          console.log(response);
 
-          if (messages && Array.isArray(messages)) {
-            const messagesToCurrentUser = messages.filter(
-              (message) => message.toUser._id === data._id
-            );
+          if (response.success) {
+            const messages = response.data.messages;
+            const userId = response.data._id;
 
-            const messagesFromCurrentUser = messages.filter(
-              (message) => message.fromUser._id === data._id
-            );
+            if (messages && Array.isArray(messages)) {
+              const messagesToCurrentUser = messages.filter(
+                (message) => message.post.author._id === userId
+              );
 
-            setMessagesToUser(messagesToCurrentUser);
-            setMessagesFromUser(messagesFromCurrentUser);
+              const messagesFromCurrentUser = messages.filter(
+                (message) => message.fromUser._id === userId
+              );
+
+              setMessagesToUser(messagesToCurrentUser);
+              setMessagesFromUser(messagesFromCurrentUser);
+            } else {
+              console.log("No messages found or messages is not an array");
+            }
           } else {
-            console.log("No messages found or messages is not an array");
+            console.log("Failed to fetch user data:", response.error);
           }
-        } else {
-          console.log("Failed to fetch user data:", response.error);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-
-    if (token) {
-      fetchMessageData();
-    }
-  }, [token, setUserData, setMessagesToUser, setMessagesFromUser]);
+    fetchMessageData();
+  }, [setMessagesToUser, setMessagesFromUser]);
 
   return (
     <div>
@@ -52,7 +49,7 @@ const Profile = ({
       <ul>
         {messagesToUser.map((message) => (
           <li key={message._id}>
-            <p>{message.content}</p>
+            <p>Message: {message.content}</p>
             <p>
               Link to Post:{" "}
               <a href={`/posts/${message.post._id}`}>{message.post.title}</a>
@@ -64,7 +61,7 @@ const Profile = ({
       <ul>
         {messagesFromUser.map((message) => (
           <li key={message._id}>
-            <p>{message.content}</p>
+            <p>Message: {message.content}</p>
             <p>
               Link to Post:{" "}
               <a href={`/posts/${message.post._id}`}>{message.post.title}</a>

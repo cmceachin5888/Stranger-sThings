@@ -1,68 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchPosts, deletePost, postMessage, fetchUserData } from "../api";
+import { deletePost, postMessage, fetchUserData, fetchPosts } from "../api";
 import { Loading } from "./Loading";
-import { MessagesForm } from "./MakePostMessages";
 
-const ViewPost = ({
-  isLoggedIn,
-  loading,
-  setLoading,
-  userData,
-  setUserData,
-  posts,
-  // setPosts,
-}) => {
+const ViewPost = ({ loading, setLoading }) => {
   const { postId } = useParams();
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const [post, setPost] = useState(null);
-  const [messages, setMessages] = useState([]);
-  // const [userData, setUserData] = useState(null);
-  // const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [content, setContent] = useState("");
 
-  console.log("userData", userData);
   useEffect(() => {
     setLoading(true);
-    if (Array.isArray(userData?.messages)) {
-      // Convert messages to an array
-      const messagesResult = userData.messages.filter(
-        (message) => message.post._id === postId
-        // (message.fromUser?._id === userData._id &&
-        //   message.toUser?._id === post.author?._id) ||
-        // (message.fromUser?._id === post.author?._id &&
-        //   message.toUser?._id === userData._id)
-      );
+    const fetchPostData = async () => {
+      const result = await fetchPosts(token);
+      const posts = result;
 
-      console.log("Messages:", messagesResult);
-      setMessages(messagesResult);
-    } else {
-      console.log("No messages found.");
-      setMessages([]);
-    }
-    setLoading(false);
-  }, [userData]);
+      if (posts.length > 0) {
+        const postById = posts.find((post) => post._id === postId);
 
-  useEffect(() => {
-    // const fetchData = async () => {
-    setLoading(true);
-
-    // console.log("Fetching post...");
-    // const userDataResult = await fetchUserData(token);
-
-    if (posts.length > 0) {
-      const postById = posts.find((post) => post._id === postId);
-      if (postById) {
-        setPost(postById);
+        if (postById) {
+          setPost(postById);
+        } else {
+          throw new Error("Post not found");
+        }
       } else {
         throw new Error("Post not found");
       }
-    } else {
-      throw new Error("Post not found");
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+    fetchPostData();
   }, [postId]);
 
   const handleDelete = async () => {
@@ -81,40 +50,29 @@ const ViewPost = ({
 
   const handleMessage = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("token");
       const response = await postMessage(token, postId, content);
       console.log("Message sent successfully");
       console.log(response);
 
-      const userDataResult = await fetchUserData(token);
-      console.log("Updated user data:");
-      console.log(userDataResult);
-      setUserData(userDataResult);
+      const userDataResult = await fetchPosts(token);
+      const posts = userDataResult;
+      if (posts.length > 0) {
+        const postById = posts.find((post) => post._id === postId);
 
-      // if (userDataResult.success) {
-      if (Array.isArray(userDataResult?.messages)) {
-        // Convert messages to an array
-        const messagesResult = userDataResult.messages.filter(
-          (message) =>
-            (message.fromUser?._id === userDataResult._id &&
-              message.toUser?._id === post.author?._id) ||
-            (message.fromUser?._id === post.author?._id &&
-              message.toUser?._id === userDataResult._id)
-        );
-
-        console.log("Messages:", messagesResult);
-        setMessages(messagesResult);
-
-        // setMessagesToUser(messagesToCurrentUser);
-        // setMessagesFromUser(messagesFromCurrentUser);
+        if (postById) {
+          setPost(postById);
+        } else {
+          throw new Error("Post not found");
+        }
       } else {
-        console.log("No messages found or messages is not an array");
+        throw new Error("Post not found");
       }
-      // } else {
-      //   console.log("Failed to update user data:", userDataResult.error);
-      // }
-    } catch (error) {
-      console.error("Failed to send message:", error);
+    } catch (err) {
+      console.error("couldn't fetch posts", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,7 +89,7 @@ const ViewPost = ({
         <p>Price: {post.price}</p>
         <p>Location: {post.location}</p>
         <p>Will Deliver: {post.willDeliver ? "Yes" : "No"}</p>
-        {isLoggedIn && post.author?._id === localStorage.getItem("userId") && (
+        {token && post.isAuthor && (
           <>
             <button onClick={handleEdit}>Edit</button>
             <button onClick={handleDelete}>Delete</button>
@@ -156,16 +114,16 @@ const ViewPost = ({
   };
 
   const renderMessages = () => {
+    console.log(post);
     return (
       <div>
         <h3>Messages</h3>
-        {messages.length > 0 ? (
-          messages.map((message) => (
+        {post.messages.length > 0 ? (
+          post.messages.map((message) => (
             <div key={message._id}>
-              <p>
-                From: {message.fromUser?.username}, To:{" "}
-                {message.toUser?.username}
-              </p>
+              <p>To: {post.author.username}</p>
+              <p>From: {message.fromUser?.username}</p>
+
               <p>{message.content}</p>
             </div>
           ))
@@ -176,16 +134,16 @@ const ViewPost = ({
     );
   };
 
-  if (error) {
-    return <p>Error: {error}</p>;
+  if (!post) {
+    return null;
   }
 
   return (
     <div>
       {post && renderPostDetails()}
-      {!isLoggedIn ? (
+      {!token ? (
         <p>Please log in to interact with the post and send messages.</p>
-      ) : post?.author?._id === userData._id ? (
+      ) : post.isAuthor ? (
         renderMessages()
       ) : (
         <>

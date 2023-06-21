@@ -12,143 +12,53 @@ import {
   ViewPost,
   MakePost,
   UpdatePost,
-  MakePostMessages,
-  Search,
+  // Search,
 } from "./components";
 
 const App = () => {
-  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  //Do we need these then?
-  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
-  // const [postId, setPostId] = useState("");
-  const [messagesToUser, setMessagesToUser] = useState([]);
-  const [messagesFromUser, setMessagesFromUser] = useState([]);
-  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("token", token);
   }, [token]);
 
-  useEffect(() => {
-    localStorage.setItem("userId", userId);
-  }, [userId]);
+  // useEffect(() => {
+  //   localStorage.setItem("userId", userId);
+  // }, [userId]);
 
   return (
     <BrowserRouter>
       <div className="app">
-        <Navbar
-          token={token}
-          setToken={setToken}
-          setIsLoggedIn={setIsLoggedIn}
-        />
-        <Search
+        <Navbar token={token} setToken={setToken} />
+        {/* <Search
           posts={posts}
           isLoggedIn={isLoggedIn}
           setIsLoggedIn={setIsLoggedIn}
-        />
+        /> */}
         <Routes>
           <Route
             path="/Register"
-            element={
-              <Register
-                setToken={setToken}
-                setLoading={setLoading}
-                setIsLoggedIn={setIsLoggedIn}
-              />
-            }
+            element={<Register setToken={setToken} setLoading={setLoading} />}
           />
           <Route
             path="/Login"
-            element={
-              <Login
-                setToken={setToken}
-                setLoading={setLoading}
-                setIsLoggedIn={setIsLoggedIn}
-              />
-            }
+            element={<Login setToken={setToken} setLoading={setLoading} />}
           />
-          <Route
-            path="/Profile"
-            element={
-              <Profile
-                token={token}
-                userData={userData}
-                setUserData={setUserData}
-                messagesToUser={messagesToUser}
-                messagesFromUser={messagesFromUser}
-                setMessagesToUser={setMessagesToUser}
-                setMessagesFromUser={setMessagesFromUser}
-              />
-            }
-          />
-          <Route
-            path="/"
-            element={
-              <Posts
-                posts={posts}
-                setPosts={setPosts}
-                setLoading={setLoading}
-                isLoggedIn={isLoggedIn}
-                setIsLoggedIn={setIsLoggedIn}
-                // userId={userId}
-                // setUserId={setUserId}
-                // postId={postId}
-                // setPostId={setPostId}
-                // userData={userData}
-                setUserData={setUserData}
-              />
-            }
-          />
+          <Route path="/Profile" element={<Profile />} />
+          <Route path="/" element={<Posts setLoading={setLoading} />} />
           <Route
             path="/ViewPost/:postId"
-            element={
-              <ViewPost
-                token={token}
-                isLoggedIn={isLoggedIn}
-                loading={loading}
-                setLoading={setLoading}
-                userData={userData}
-                setUserData={setUserData}
-                posts={posts}
-                // setPosts={setPosts}
-              />
-            }
+            element={<ViewPost loading={loading} setLoading={setLoading} />}
           />
           <Route
             path="/MakePost"
-            element={
-              <MakePost
-                posts={posts}
-                setPosts={setPosts}
-                setLoading={setLoading}
-                isLoggedIn={isLoggedIn}
-                setIsLoggedIn={setIsLoggedIn}
-                // userId={userId}
-              />
-            }
+            element={<MakePost setLoading={setLoading} />}
           />
           <Route
             path="/UpdatePost/:postId"
-            element={
-              <UpdatePost
-                loading={loading}
-                setLoading={setLoading}
-                // isLoggedIn={isLoggedIn}
-                // setIsLoggedIn={setIsLoggedIn}
-                posts={posts}
-                setPosts={setPosts}
-                userData={userData}
-                setUserData={setUserData}
-              />
-            }
+            element={<UpdatePost setLoading={setLoading} />}
           />
-          {/* <Route
-            path="/PostMessage/:postId"
-            element={<MakePostMessages userId={userId} />}
-          /> */}
         </Routes>
         {loading ? <Loading /> : null}
       </div>

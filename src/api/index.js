@@ -98,21 +98,8 @@ export const fetchUserData = async (token) => {
     });
 
     const result = await response.json();
-    const userData = result;
 
-    // Fetch messages between user and post authors
-    const messagesResponse = await fetch(`${BASE_URL}/users/me/messages`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const messagesResult = await messagesResponse.json();
-    userData.messages = messagesResult;
-    // Why are we returning userData if we have set two different variables above?
-    console.log(userData);
-    return userData;
+    return result;
   } catch (err) {
     console.error("Couldn't fetch user data", err);
   }

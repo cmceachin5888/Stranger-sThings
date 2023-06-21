@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
-const LoginForm = ({ setToken, setLoading, setIsLoggedIn }) => {
+const LoginForm = ({ setToken, setLoading }) => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -23,7 +23,6 @@ const LoginForm = ({ setToken, setLoading, setIsLoggedIn }) => {
         const result = await loginUser(username, password);
         localStorage.setItem("token", result.token);
         setToken(result.token);
-        setIsLoggedIn(true);
         setUsername("");
         setPassword("");
         navigate("/Profile");
@@ -39,13 +38,6 @@ const LoginForm = ({ setToken, setLoading, setIsLoggedIn }) => {
 
     loginData();
   };
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     navigate("/");
-  //   }
-  // }, []);
 
   return (
     <div id="container">

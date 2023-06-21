@@ -2,15 +2,11 @@ import React, { useState } from "react";
 import { makePost } from "../api";
 import { useNavigate } from "react-router-dom";
 
-const NewPostForm = ({
-  setLoading,
-  // isLoggedIn,
-  // setIsLoggedIn,
-  posts,
-  setPosts,
-}) => {
+const NewPostForm = ({ setLoading }) => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
+  const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -27,7 +23,6 @@ const NewPostForm = ({
 
     const makePostData = async () => {
       setLoading(true);
-      const token = localStorage.getItem("token");
       try {
         const result = await makePost(
           token,

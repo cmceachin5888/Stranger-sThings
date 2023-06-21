@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { updatePost } from "../api";
+import { updatePost, fetchPosts } from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 
-const UpdatePostForm = ({ setLoading, posts, setPosts }) => {
+const UpdatePostForm = ({ setLoading }) => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
   const { postId } = useParams();
 
+  const [post, setPost] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -13,15 +15,25 @@ const UpdatePostForm = ({ setLoading, posts, setPosts }) => {
   const [willDeliver, setWillDeliver] = useState(false);
 
   useEffect(() => {
-    const post = posts.find((post) => post._id === postId);
-    if (post) {
-      setTitle(post.title);
-      setDescription(post.description);
-      setPrice(post.price);
-      setLocation(post.location);
-      setWillDeliver(post.willDeliver);
-    }
-  }, [postId, posts]);
+    setLoading(true);
+
+    const fetchPostsData = async () => {
+      const result = await fetchPosts(token);
+      const posts = result;
+
+      const singlePost = posts.find((post) => post._id === postId);
+      if (singlePost) {
+        setPost(singlePost);
+        setTitle(singlePost.title);
+        setDescription(singlePost.description);
+        setPrice(singlePost.price);
+        setLocation(singlePost.location);
+        setWillDeliver(singlePost.willDeliver);
+      }
+      setLoading(false);
+    };
+    fetchPostsData();
+  }, [postId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -47,12 +59,9 @@ const UpdatePostForm = ({ setLoading, posts, setPosts }) => {
 
       console.log("Updated result:", result);
 
-      const updatedPosts = posts.map((post) =>
-        post._id === postId ? result : post
-      );
-
-      setPosts(updatedPosts);
-      navigate("/");
+      setPost(result);
+      console.log(result);
+      navigate(`/ViewPost/${postId}`);
     } catch (error) {
       console.error("Failed to update the post", error);
     } finally {

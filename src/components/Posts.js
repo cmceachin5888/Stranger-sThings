@@ -1,29 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchPosts, fetchUserData } from "../api";
 import { useNavigate } from "react-router-dom";
 
-const RenderAllPosts = ({
-  posts,
-  setPosts,
-  setLoading,
-  isLoggedIn,
-  setIsLoggedIn,
-  setUserData,
-}) => {
+const RenderAllPosts = ({ setLoading }) => {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchPostsData = async () => {
       setLoading(true);
 
       try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          // Not sure I understand this section? Purpose of fetching User Data?
-          setIsLoggedIn(true);
-          const userData = await fetchUserData(token);
-          setUserData(userData);
-        }
         const postsData = await fetchPosts(token);
         setPosts(postsData);
       } catch (error) {
@@ -33,7 +22,7 @@ const RenderAllPosts = ({
       }
     };
 
-    fetchData();
+    fetchPostsData();
   }, []);
 
   const handleViewPost = (postId) => {
@@ -54,7 +43,7 @@ const RenderAllPosts = ({
             Will Deliver?:{" "}
             {post.willDeliver ? "Will Deliver" : "Will NOT deliver"}
           </div>
-          {isLoggedIn && (
+          {token && (
             <button onClick={() => handleViewPost(post._id)}>View Post</button>
           )}
         </div>
