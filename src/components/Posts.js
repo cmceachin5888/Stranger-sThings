@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchPosts, fetchUserData } from "../api";
 import { useNavigate } from "react-router-dom";
+import Button from '@mui/material/Button';
 
 const RenderAllPosts = ({ setLoading }) => {
   const navigate = useNavigate();
@@ -44,7 +45,12 @@ const RenderAllPosts = ({ setLoading }) => {
             {post.willDeliver ? "Will Deliver" : "Will NOT deliver"}
           </div>
           {token && (
-            <button onClick={() => handleViewPost(post._id)}>View Post</button>
+            <Button 
+              variant="contained"
+              size="small"
+              onClick={() => handleViewPost(post._id)}>
+              View Post
+            </Button>
           )}
         </div>
       ))}

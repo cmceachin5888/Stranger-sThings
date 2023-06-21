@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { makePost } from "../api";
 import { useNavigate } from "react-router-dom";
+import { Button, Box, TextField, Checkbox, FormControlLabel } from "@mui/material";
 
 const NewPostForm = ({ setLoading }) => {
   const navigate = useNavigate();
@@ -60,53 +61,58 @@ const NewPostForm = ({ setLoading }) => {
       <div id="navbar">
         Feel free to add your new product here! Fields with a star are required!
       </div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="Title">*Title:</label>
-        <input
-          placeholder={"Title"}
-          type="text"
-          name="Title"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          required
-        />
-        <label htmlFor="Description">*Description:</label>
-        <input
-          placeholder={"Description"}
-          type="text"
-          name="Description"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-          required
-        />
-        <label htmlFor="Price">*Price:</label>
-        <input
-          placeholder={"Price"}
-          type="text"
-          name="Price"
-          value={price}
-          onChange={(event) => setPrice(event.target.value)}
-          required
-        />
-        <label htmlFor="Location">*Location:</label>
-        <input
-          placeholder={"Location"}
-          type="text"
-          name="Location"
-          value={location}
-          onChange={(event) => setLocation(event.target.value)}
-          required
-        />
-        <label htmlFor="WillDeliver">Will Deliver?:</label>
-        <input
-          type="Checkbox"
-          name="WillDeliver"
-          value="true"
-          checked={willDeliver}
-          onChange={(event) => setWillDeliver(event.target.checked)}
-        />
-        <button type="submit">Submit Post</button>
-      </form>
+      <Box
+        component="form"
+        sx={{
+          '& .MuiTextField-root': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <div>
+          <TextField
+            required
+            id="outlined-required"
+            label="Title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+          <TextField
+            required
+            id="outlined-required"
+            label="Description"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+          <TextField
+            required
+            id="outlined-required"
+            label="Price"
+            value={price}
+            onChange={(event) => setPrice(event.target.value)}
+          />
+          <TextField
+            required
+            id="outlined-required"
+            label="Location"
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+          />
+          <FormControlLabel control={
+            <Checkbox
+              onChange={(event) => setWillDeliver(event.target.checked)}
+            />}
+            checked={willDeliver}
+            label="Will Deliver?" 
+          />
+          <br></br>
+          <Button
+            variant="contained"
+            size="small"
+            type="submit"
+            onClick={handleSubmit}>Submit Post</Button>
+        </div>
+      </Box>
     </div>
   );
 };

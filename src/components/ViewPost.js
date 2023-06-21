@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { deletePost, postMessage, fetchUserData, fetchPosts } from "../api";
 import { Loading } from "./Loading";
+import { Button } from "@mui/material";
+import Delete from '@mui/icons-material/Delete';
+import Send from '@mui/icons-material/Send';
+
 
 const ViewPost = ({ loading, setLoading }) => {
   const { postId } = useParams();
@@ -92,8 +96,15 @@ const ViewPost = ({ loading, setLoading }) => {
         <p>Will Deliver: {post.willDeliver ? "Yes" : "No"}</p>
         {token && post.isAuthor && (
           <>
-            <button onClick={handleEdit}>Edit</button>
-            <button onClick={handleDelete}>Delete</button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleEdit}>Edit</Button>
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<Delete />}
+              onClick={handleDelete}>Delete</Button>
           </>
         )}
       </div>
@@ -109,7 +120,11 @@ const ViewPost = ({ loading, setLoading }) => {
           onChange={(e) => setContent(e.target.value)}
           placeholder="Type your message here..."
         ></textarea>
-        <button onClick={handleMessage}>Send</button>
+        <Button 
+          variant="contained"
+          size="small"
+          endIcon={<Send />}
+          onClick={handleMessage}>Send</Button>
       </div>
     );
   };
