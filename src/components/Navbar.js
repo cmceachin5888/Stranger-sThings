@@ -8,7 +8,8 @@ const Navbar = ({ token, setToken, setIsLoggedIn }) => {
     setToken("");
     localStorage.removeItem("token");
     setIsLoggedIn(false); // Add this line
-    console.log("Logged out");
+    alert("You are now Logged out!");
+    console.log("You are now Logged out!");
 
     const token = localStorage.getItem("token");
     if (!token) {

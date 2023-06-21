@@ -3,7 +3,6 @@ import { makePost } from "../api";
 import { useNavigate } from "react-router-dom";
 
 const NewPostForm = ({
-  // loading,
   setLoading,
   // isLoggedIn,
   // setIsLoggedIn,
@@ -24,10 +23,10 @@ const NewPostForm = ({
       return;
     }
 
-    setLoading(true);
     event.preventDefault();
 
     const makePostData = async () => {
+      setLoading(true);
       const token = localStorage.getItem("token");
       try {
         const result = await makePost(
@@ -64,7 +63,7 @@ const NewPostForm = ({
   return (
     <div id="container">
       <div id="navbar">
-        Feel free to add your new product here! Fields with star are required.
+        Feel free to add your new product here! Fields with a star are required!
       </div>
       <form onSubmit={handleSubmit}>
         <label htmlFor="Title">*Title:</label>
@@ -113,7 +112,6 @@ const NewPostForm = ({
         />
         <button type="submit">Submit Post</button>
       </form>
-      {/* <div>{errorMessage}</div> */}
     </div>
   );
 };

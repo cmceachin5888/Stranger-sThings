@@ -1,9 +1,11 @@
+export { default as Navbar } from "./Navbar";
+export { default as Loading } from "./Loading";
+export { default as Register } from "./Register";
 export { default as Login } from "./Login";
-export { default as MakePostMessages } from "./MakePostMessages";
+export { default as Profile } from "./Profile";
 export { default as Posts } from "./Posts";
+export { default as ViewPost } from "./ViewPost";
 export { default as MakePost } from "./MakePost";
 export { default as UpdatePost } from "./UpdatePost";
-export { default as Profile } from "./Profile";
-export { default as Register } from "./Register";
-export { default as Navbar } from "./Navbar";
-export { default as ViewPost } from "./ViewPost";
+export { default as MakePostMessages } from "./MakePostMessages";
+export { default as Search } from "./Search";

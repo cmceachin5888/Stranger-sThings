@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+}
+
+/* #app {
+  height: 100%;
+} */
+
+/* .app {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: auto auto 1fr;
+  grid-gap: 8px;
+
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+
+  background: #444;
+} */
+*/ #loading {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.4);
+
+  font-family: "Roboto", sans-serif;
+  font-size: 2rem;
+  text-align: center;
+}
+
+#loading .message {
+  min-width: 480px;
+  padding: 3rem;
+
+  box-shadow: 0 2px 8px black;
+  background: white;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,9 +1,9 @@
 import React from "react";
 
-const Loading = () => {
+export const Loading = () => {
   return (
     <div id="loading">
-      <h2 className="message">Searching...</h2>
+      <h2 className="message">Loading...</h2>
     </div>
   );
 };

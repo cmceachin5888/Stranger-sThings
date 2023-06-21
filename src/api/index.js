@@ -10,6 +10,7 @@ export const BASE_URL = `https://strangers-things.herokuapp.com/api/${COHORT_NAM
 // Creating a new User and sending it to the server for a token
 export const registerUser = async (username, password) => {
   const minLength = 8;
+  const maxLength = 5;
   const specChar = /[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?!]+/;
   const uppercaseChar = /[A-Z]/;
 
@@ -21,6 +22,12 @@ export const registerUser = async (username, password) => {
   }
   if (!uppercaseChar.test(password)) {
     throw new Error(`Password must contain at least ONE Uppercase Letter.`);
+  }
+  if (username.length < maxLength) {
+    throw new Error(`Username must be at least ${maxLength} characters long.`);
+  }
+  if (!uppercaseChar.test(username)) {
+    throw new Error(`Username must contain at least ONE Uppercase Letter.`);
   }
 
   let result;
@@ -72,7 +79,7 @@ export const loginUser = async (username, password) => {
     console.log(result);
   } catch (err) {
     throw new Error("Trouble Logging In");
-  }
+  } // Throw error message API has set up already such as "Username or password is incorrect, please try again"
   if (!result.success) {
     throw new Error(result.error.message);
   }
@@ -80,8 +87,7 @@ export const loginUser = async (username, password) => {
   return result.data;
 };
 
-// get user data when logged in
-
+// Get user data for self
 export const fetchUserData = async (token) => {
   try {
     const response = await fetch(`${BASE_URL}/users/me`, {
@@ -104,13 +110,14 @@ export const fetchUserData = async (token) => {
 
     const messagesResult = await messagesResponse.json();
     userData.messages = messagesResult;
-
+    // Why are we returning userData if we have set two different variables above?
     console.log(userData);
     return userData;
   } catch (err) {
-    console.error(err);
+    console.error("Couldn't fetch user data", err);
   }
 };
+
 // POST SECTION
 
 // fetching POSTs to show the data on the page
@@ -129,11 +136,11 @@ export const fetchPosts = async (token) => {
 
     return posts;
   } catch (err) {
-    console.log("No Posts Available", err);
+    console.error("No Posts Available", err);
   }
 };
 
-// // Creating or making a new post and sending the data to the server
+// Creating or making a new post and sending the data to the server
 export const makePost = async (
   token,
   title,
@@ -167,7 +174,7 @@ export const makePost = async (
   }
 };
 
-// //editing a post if you have authored it
+// Editing a post if you have authored it
 export const updatePost = async (
   postId,
   token,
@@ -208,7 +215,7 @@ export const updatePost = async (
   return result.data;
 };
 
-// // Deleting a post component
+// Deleting a post component
 export const deletePost = async (token, postId) => {
   try {
     const response = await fetch(`${BASE_URL}/posts/${postId}`, {
@@ -232,8 +239,8 @@ export const deletePost = async (token, postId) => {
 };
 
 // Messages area
-
-export const postMessage = async (postId, token, message) => {
+// Creating or making a new Message
+export const postMessage = async (token, postId, content) => {
   try {
     const response = await fetch(`${BASE_URL}/posts/${postId}/messages`, {
       method: "POST",
@@ -242,9 +249,7 @@ export const postMessage = async (postId, token, message) => {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        message: {
-          content: message,
-        },
+        message: { content },
       }),
     });
 

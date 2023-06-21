@@ -1,68 +1,68 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchPosts, deletePost, postMessage, fetchUserData } from "../api";
+import { Loading } from "./Loading";
+import { MessagesForm } from "./MakePostMessages";
 
-const ViewPost = ({ isLoggedIn }) => {
+const ViewPost = ({
+  isLoggedIn,
+  loading,
+  setLoading,
+  userData,
+  setUserData,
+  posts,
+  // setPosts,
+}) => {
   const { postId } = useParams();
   const navigate = useNavigate();
+
   const [post, setPost] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [userData, setUserData] = useState(null);
-  const [isLoading, setLoading] = useState(true);
+  // const [userData, setUserData] = useState(null);
+  // const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [content, setContent] = useState("");
 
+  console.log("userData", userData);
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const userId = localStorage.getItem("userId");
+    setLoading(true);
+    if (Array.isArray(userData?.messages)) {
+      // Convert messages to an array
+      const messagesResult = userData.messages.filter(
+        (message) => message.post._id === postId
+        // (message.fromUser?._id === userData._id &&
+        //   message.toUser?._id === post.author?._id) ||
+        // (message.fromUser?._id === post.author?._id &&
+        //   message.toUser?._id === userData._id)
+      );
 
-        console.log("Fetching post...");
-        const [postResult, userDataResult] = await Promise.all([
-          fetchPosts(postId, token),
-          fetchUserData(token),
-        ]);
+      console.log("Messages:", messagesResult);
+      setMessages(messagesResult);
+    } else {
+      console.log("No messages found.");
+      setMessages([]);
+    }
+    setLoading(false);
+  }, [userData]);
 
-        if (postResult && postResult.length > 0) {
-          const postById = postResult.find((post) => post._id === postId);
-          if (postById) {
-            setPost(postById);
-          } else {
-            throw new Error("Post not found");
-          }
-        } else {
-          throw new Error("Post not found");
-        }
+  useEffect(() => {
+    // const fetchData = async () => {
+    setLoading(true);
 
-        console.log("Post:", post);
-        setUserData(userDataResult);
-        console.log("UserData:", userDataResult);
+    // console.log("Fetching post...");
+    // const userDataResult = await fetchUserData(token);
 
-        if (Array.isArray(userDataResult?.messages)) {
-          // Convert messages to an array
-          const messagesResult = userDataResult.messages.filter(
-            (message) =>
-              (message.fromUser?._id === userId && message.toUser?._id === post.author?._id) ||
-              (message.fromUser?._id === post.author?._id && message.toUser?._id === userId)
-          );
-
-          console.log("Messages:", messagesResult);
-          setMessages(messagesResult);
-        } else {
-          console.log("No messages found.");
-          setMessages([]);
-        }
-
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setError(error.message);
-        setLoading(false);
+    if (posts.length > 0) {
+      const postById = posts.find((post) => post._id === postId);
+      if (postById) {
+        setPost(postById);
+      } else {
+        throw new Error("Post not found");
       }
-    };
-
-    fetchData();
+    } else {
+      throw new Error("Post not found");
+    }
+    setLoading(false);
   }, [postId]);
 
   const handleDelete = async () => {
@@ -79,39 +79,48 @@ const ViewPost = ({ isLoggedIn }) => {
     navigate(`/UpdatePost/${postId}`);
   };
 
-const handleMessage = async () => {
-  try {
-    const response = await sendMessage(token, postId, message);
-    console.log("Message sent successfully");
-    console.log(response);
+  const handleMessage = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await postMessage(token, postId, content);
+      console.log("Message sent successfully");
+      console.log(response);
 
-    const userDataResult = await fetchUserData(token);
-    console.log("Updated user data:");
-    console.log(userDataResult);
+      const userDataResult = await fetchUserData(token);
+      console.log("Updated user data:");
+      console.log(userDataResult);
+      setUserData(userDataResult);
 
-    if (userDataResult.success) {
-      const { data } = userDataResult;
-      if (data.messages && Array.isArray(data.messages)) {
-        const messagesToCurrentUser = data.messages.filter(
-          (message) => message.toUser._id === data._id
+      // if (userDataResult.success) {
+      if (Array.isArray(userDataResult?.messages)) {
+        // Convert messages to an array
+        const messagesResult = userDataResult.messages.filter(
+          (message) =>
+            (message.fromUser?._id === userDataResult._id &&
+              message.toUser?._id === post.author?._id) ||
+            (message.fromUser?._id === post.author?._id &&
+              message.toUser?._id === userDataResult._id)
         );
 
-        const messagesFromCurrentUser = data.messages.filter(
-          (message) => message.fromUser._id === data._id
-        );
+        console.log("Messages:", messagesResult);
+        setMessages(messagesResult);
 
-        setMessagesToUser(messagesToCurrentUser);
-        setMessagesFromUser(messagesFromCurrentUser);
+        // setMessagesToUser(messagesToCurrentUser);
+        // setMessagesFromUser(messagesFromCurrentUser);
       } else {
         console.log("No messages found or messages is not an array");
       }
-    } else {
-      console.log("Failed to update user data:", userDataResult.error);
+      // } else {
+      //   console.log("Failed to update user data:", userDataResult.error);
+      // }
+    } catch (error) {
+      console.error("Failed to send message:", error);
     }
-  } catch (error) {
-    console.error("Failed to send message:", error);
+  };
+
+  {
+    loading ? <Loading /> : null;
   }
-};
 
   const renderPostDetails = () => {
     return (
@@ -154,7 +163,8 @@ const handleMessage = async () => {
           messages.map((message) => (
             <div key={message._id}>
               <p>
-                From: {message.fromUser?.username}, To: {message.toUser?.username}
+                From: {message.fromUser?.username}, To:{" "}
+                {message.toUser?.username}
               </p>
               <p>{message.content}</p>
             </div>
@@ -166,10 +176,6 @@ const handleMessage = async () => {
     );
   };
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   if (error) {
     return <p>Error: {error}</p>;
   }
@@ -179,7 +185,7 @@ const handleMessage = async () => {
       {post && renderPostDetails()}
       {!isLoggedIn ? (
         <p>Please log in to interact with the post and send messages.</p>
-      ) : post?.author?._id === localStorage.getItem("userId") ? (
+      ) : post?.author?._id === userData._id ? (
         renderMessages()
       ) : (
         <>

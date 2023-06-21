@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { registerUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
-const RegisterNew = ({ token, setToken, loading, setLoading }) => {
+const RegisterNew = ({ setToken, setLoading, setIsLoggedIn }) => {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -16,23 +16,22 @@ const RegisterNew = ({ token, setToken, loading, setLoading }) => {
       return;
     }
 
-    setLoading(true);
-
     const registerData = async () => {
+      setLoading(true);
+
       try {
         const result = await registerUser(username, password);
         localStorage.setItem("token", result.token);
         setToken(result.token);
         setUsername("");
         setPassword("");
-        setErrorMessage("");
-        navigate("/");
+        setIsLoggedIn(true);
+        navigate("/Profile");
       } catch (error) {
-        setErrorMessage(error.message);
+        setErrorMessage(error?.message || "An error occurred");
         console.log(error);
       } finally {
         setLoading(false);
-        alert("Thank you for signing up!");
       }
     };
     registerData();
@@ -63,7 +62,13 @@ const RegisterNew = ({ token, setToken, loading, setLoading }) => {
         <button type="submit">Register</button>
       </form>
       <div>{errorMessage}</div>
-      <div href="REGISTER URL INSERT HERE">Have an Account, Login here!</div>
+      <div
+        onClick={() => {
+          navigate("/Login");
+        }}
+      >
+        Have an Account, Login here!
+      </div>
     </div>
   );
 };

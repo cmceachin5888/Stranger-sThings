@@ -2,17 +2,15 @@ import React, { useState } from "react";
 import { postMessage } from "../api";
 import { useParams } from "react-router-dom";
 
-
-const MessagesForm = ({ userId }) => {
-   const [message, setMessage] = useState("");
-   const { postId } = useParams();
-
+export const MessagesForm = () => {
+  const [message, setMessage] = useState("");
+  const { postId } = useParams();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if(!message) {
-      console.error("Please enter a message.")
+    if (!message) {
+      console.error("Please enter a message.");
       return;
     }
 
@@ -21,13 +19,12 @@ const MessagesForm = ({ userId }) => {
 
       const result = await postMessage(postId, token, message);
 
-      console.log ("Sent Message:", result);
+      console.log("Sent Message:", result);
 
       setMessage("");
     } catch (error) {
       console.error("Failed to send message", error);
     }
-
   };
 
   return (
@@ -49,4 +46,3 @@ const MessagesForm = ({ userId }) => {
 };
 
 export default MessagesForm;
-

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
 
-const LoginForm = ({ token, setToken, loading, setLoading, setIsLoggedIn }) => {
+const LoginForm = ({ setToken, setLoading, setIsLoggedIn }) => {
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -16,22 +16,28 @@ const LoginForm = ({ token, setToken, loading, setLoading, setIsLoggedIn }) => {
       return;
     }
 
-    setLoading(true);
+    const loginData = async () => {
+      setLoading(true);
 
-    try {
-      const result = await loginUser(username, password);
-      localStorage.setItem("token", result.token);
-      setToken(result.token);
-      setIsLoggedIn(true);
-      setUsername("");
-      setPassword("");
-      navigate("/Profile");
-    } catch (error) {
-      setErrorMessage(error?.message || "An error occurred");
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+      try {
+        const result = await loginUser(username, password);
+        localStorage.setItem("token", result.token);
+        setToken(result.token);
+        setIsLoggedIn(true);
+        setUsername("");
+        setPassword("");
+        navigate("/Profile");
+      } catch (error) {
+        setErrorMessage(error?.message || "An error occurred");
+        setUsername("");
+        setPassword("");
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loginData();
   };
 
   // useEffect(() => {
@@ -66,7 +72,14 @@ const LoginForm = ({ token, setToken, loading, setLoading, setIsLoggedIn }) => {
         <button type="submit">Log In</button>
       </form>
       <div>{errorMessage}</div>
-      <div href="REGISTER URL INSERT HERE">Need to Register? Click Here!</div>
+      <div
+        onClick={() => {
+          navigate("/Register");
+        }}
+      >
+        {" "}
+        Need to Register? Click Here!
+      </div>
     </div>
   );
 };

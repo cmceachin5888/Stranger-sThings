@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import { updatePost } from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 
-const UpdatePostForm = ({
-  setLoading,
-  posts,
-  setPosts,
-}) => {
+const UpdatePostForm = ({ setLoading, posts, setPosts }) => {
   const navigate = useNavigate();
   const { postId } = useParams();
 
@@ -35,9 +31,8 @@ const UpdatePostForm = ({
       return;
     }
 
-    setLoading(true);
-
     try {
+      setLoading(true);
       const token = localStorage.getItem("token");
 
       const result = await updatePost(

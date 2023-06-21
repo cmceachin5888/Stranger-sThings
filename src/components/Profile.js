@@ -3,7 +3,7 @@ import { fetchUserData } from "../api";
 
 const Profile = ({
   token,
-  userData,
+  // userData,
   setUserData,
   messagesToUser,
   setMessagesToUser,
@@ -11,7 +11,7 @@ const Profile = ({
   setMessagesFromUser,
 }) => {
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMessageData = async () => {
       try {
         const response = await fetchUserData(token);
         if (response.success) {
@@ -41,7 +41,7 @@ const Profile = ({
     };
 
     if (token) {
-      fetchData();
+      fetchMessageData();
     }
   }, [token, setUserData, setMessagesToUser, setMessagesFromUser]);
 
